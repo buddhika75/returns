@@ -158,7 +158,6 @@ public class WebUserController implements Serializable {
         myPrivilegeTypes = new ArrayList<PrivilegeType>();
         if (developmentStage) {
             addGuestPrivilages();
-            addPhiPrivilages();
             addMohPrivilages();
             addRdhsPrivilages();
             addPdhsPrivileges();
@@ -172,41 +171,38 @@ public class WebUserController implements Serializable {
             case Guest:
                 addGuestPrivilages();
                 return;
-            //PHI Level
-            case PHI:
-            case PHI_Staff:
-                addGuestPrivilages();
-                addPhiPrivilages();
-                return;
             //MOH Level
             case MOH:
             case AMOH:
             case MO:
             case RMO_AMO:
+            case SPHNS:
             case SPHI:
+            case SPHM:
             case MOH_Staff:
                 addGuestPrivilages();
-                addPhiPrivilages();
                 addMohPrivilages();
                 return;
             //District Level
             case CCP_RDHS:
             case MO_School_Health:
             case MO_RDHS:
+            case DSPHNS:
             case DSPHI:
+            case DSPHM:
             case RDHS_Staff:
                 addGuestPrivilages();
-                addPhiPrivilages();
                 addMohPrivilages();
                 addRdhsPrivilages();
                 return;
             //Provincial Level
             case CCP_PDHS:
             case MO_PDHS:
+            case PSPHNS:
             case PSPHI:
+            case PSPHM:
             case PDHS_Staff:
                 addGuestPrivilages();
-                addPhiPrivilages();
                 addMohPrivilages();
                 addRdhsPrivilages();
                 addPdhsPrivileges();
@@ -216,7 +212,6 @@ public class WebUserController implements Serializable {
             case System_Super_User:
             case Institution_Super_User:
                 addGuestPrivilages();
-                addPhiPrivilages();
                 addMohPrivilages();
                 addRdhsPrivilages();
                 addPdhsPrivileges();
@@ -225,7 +220,6 @@ public class WebUserController implements Serializable {
             case Institution_Administrator:
             case System_Administrator:
                 addGuestPrivilages();
-                addPhiPrivilages();
                 addMohPrivilages();
                 addRdhsPrivilages();
                 addPdhsPrivileges();
@@ -237,11 +231,6 @@ public class WebUserController implements Serializable {
 
     private void addGuestPrivilages() {
         myPrivilegeTypes.add(PrivilegeType.Guest);
-    }
-
-    private void addPhiPrivilages() {
-        myPrivilegeTypes.add(PrivilegeType.PHI_Staff);
-        myPrivilegeTypes.add(PrivilegeType.PHI);
     }
 
     private void addMohPrivilages() {
@@ -298,21 +287,9 @@ public class WebUserController implements Serializable {
             mySchools = institutionController.getInstitutions(InstitutionType.School, null, null, null);
         }
         switch (loggedUser.getType()) {
-            case PHI:
-            case PHI_Staff:
-                loggedPhiArea = loggedUser.getArea();
-                loggedMohArea = loggedPhiArea.getParentArea();
-                loggedRdhsArea = loggedMohArea.getParentArea();
-                loggedPdhsArea = loggedRdhsArea.getParentArea();
-                myProvinces.add(loggedPdhsArea);
-                myDistricts.add(loggedRdhsArea);
-                myMohAreas.add(loggedMohArea);
-                myPhiAreas.add(loggedPhiArea);
-                myAreas = areaController.getAreas(null, loggedPhiArea);
-                myEducationalZones = areaController.getAreas(AreaType.EducationalZone, null);
-                mySchools = institutionController.getInstitutions(InstitutionType.School, loggedPhiArea, null, null);
-                break;
+            case SPHNS:
             case SPHI:
+            case SPHM:
             case MOH:
             case AMOH:
             case RMO_AMO:
@@ -332,7 +309,9 @@ public class WebUserController implements Serializable {
             case MO_RDHS:
             case CCP_RDHS:
             case RDHS_Staff:
+            case DSPHNS:
             case DSPHI:
+            case DSPHM:
             case MO_School_Health:
                 loggedRdhsArea = loggedUser.getArea();
                 loggedPdhsArea = loggedRdhsArea.getParentArea();
@@ -345,6 +324,8 @@ public class WebUserController implements Serializable {
                 mySchools = institutionController.getInstitutions(InstitutionType.School, null, loggedRdhsArea, null);
                 break;
             case PSPHI:
+            case PSPHNS:
+            case PSPHM:
             case PDHS_Staff:
             case MO_PDHS:
             case CCP_PDHS:
@@ -393,7 +374,11 @@ public class WebUserController implements Serializable {
             case MO:
             case RMO_AMO:
             case PSPHI:
+            case PSPHNS:
+            case PSPHM:
+            case DSPHNS:
             case DSPHI:
+            case DSPHM:
             case SPHI:
             case RDHS_Staff:
             case PDHS_Staff:
@@ -403,8 +388,6 @@ public class WebUserController implements Serializable {
             case CCP_PDHS:
             case CCP_RDHS:
                 return true;
-            case PHI:
-            case PHI_Staff:
             case Guest:
                 return false;
 
@@ -427,6 +410,9 @@ public class WebUserController implements Serializable {
             case PSPHI:
             case DSPHI:
             case SPHI:
+            case SPHM:
+            case SPHNS:
+            
             case RDHS_Staff:
             case PDHS_Staff:
             case MO_School_Health:
@@ -435,8 +421,6 @@ public class WebUserController implements Serializable {
             case CCP_PDHS:
             case CCP_RDHS:
                 return true;
-            case PHI:
-            case PHI_Staff:
             case MOH:
             case MOH_Staff:
             case AMOH:

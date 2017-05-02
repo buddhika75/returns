@@ -18,24 +18,27 @@ public enum PrivilegeType {
     //Provincial Level
     CCP_PDHS,
     MO_PDHS,
+    PSPHNS,
     PSPHI,
+    PSPHM,
     PDHS_Staff,
     //District Level
     CCP_RDHS,
     MO_School_Health,
     MO_RDHS,
+    DSPHNS,
     DSPHI,
+    DSPHM,
     RDHS_Staff,
     //MOH Level
     MOH,
     AMOH,
     MO,
     RMO_AMO,
+    SPHNS,
     SPHI,
+    SPHM,
     MOH_Staff,
-    //PHI Level
-    PHI,
-    PHI_Staff,
     //Guest Level
     Guest,
 }
