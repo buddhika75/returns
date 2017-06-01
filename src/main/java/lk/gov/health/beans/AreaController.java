@@ -1,5 +1,11 @@
 package lk.gov.health.beans;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import lk.gov.health.schoolhealth.Area;
 import lk.gov.health.beans.util.JsfUtil;
 import lk.gov.health.beans.util.JsfUtil.PersistAction;
@@ -22,7 +28,15 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 import javax.inject.Named;
+import lk.gov.health.faces.CoordinateFacade;
 import lk.gov.health.schoolhealth.AreaType;
+import lk.gov.health.schoolhealth.Coordinate;
+import org.primefaces.model.UploadedFile;
+import org.primefaces.event.map.OverlaySelectEvent;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Polygon;
 
 @Named
 @SessionScoped
@@ -30,11 +44,109 @@ public class AreaController implements Serializable {
 
     @EJB
     private lk.gov.health.faces.AreaFacade ejbFacade;
+    @EJB
+    CoordinateFacade coordinateFacade;
     private List<Area> items = null;
     private Area selected;
 
     @Inject
     WebUserController webUserController;
+
+    private MapModel polygonModel;
+
+    public String drawArea() {
+        polygonModel = new DefaultMapModel();
+
+        //Polygon
+        Polygon polygon = new Polygon();
+
+        String j = "select c from Coordinate c where c.area=:a";
+        Map m = new HashMap();
+        m.put("a", selected);
+        List<Coordinate> cs = coordinateFacade.findBySQL(j, m);
+        for (Coordinate c : cs) {
+            LatLng coord = new LatLng(c.getLatitude(), c.getLongitude());
+            polygon.getPaths().add(coord);
+        }
+
+        polygon.setStrokeColor("#FF9900");
+        polygon.setFillColor("#FF9900");
+        polygon.setStrokeOpacity(0.7);
+        polygon.setFillOpacity(0.7);
+
+        polygonModel.addOverlay(polygon);
+
+        return "/area/area_map";
+    }
+
+    private UploadedFile file;
+
+    public UploadedFile getFile() {
+        return file;
+    }
+
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+
+    public String saveCoordinates() {
+        if (selected == null || selected.getId() == null) {
+            JsfUtil.addErrorMessage("Please select an Area");
+            return "";
+        }
+        if (file == null || "".equals(file.getFileName())) {
+            return "";
+        }
+        if (file == null) {
+            JsfUtil.addErrorMessage("Please select an CSV File");
+            return "";
+        }
+
+        String j = "select c from Coordinate c where c.area=:a";
+        Map m = new HashMap();
+        m.put("a", selected);
+        List<Coordinate> cs = coordinateFacade.findBySQL(j, m);
+        for (Coordinate c : cs) {
+            coordinateFacade.remove(c);
+        }
+
+        try {
+            File f = new File(getSelected().toString());
+            String line = "";
+            String cvsSplitBy = ",";
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                String[] country = line.split(cvsSplitBy);
+
+                if (i > 0) {
+                    if (country.length > 2) {
+                        System.out.println("Coordinates [Longitude= " + country[1] + " , Latitude=" + country[2] + "]");
+                        Coordinate c = new Coordinate();
+                        c.setArea(selected);
+
+                        String strLon=country[1].replace("\"", "");
+                        String strLat =country[2].replace("\"", "");
+                        
+                        double lon = Double.parseDouble(strLon);
+                        System.out.println("lon = " + lon);
+                        
+                        double lat = Double.parseDouble(strLat);
+                        
+                        c.setLongitude(lon);
+                        c.setLatitude(lat);
+
+                        coordinateFacade.create(c);
+                    }
+                }
+                i++;
+            }
+            return "";
+        } catch (IOException e) {
+            return "";
+        }
+
+    }
 
     public String toAddProvince() {
         if (!webUserController.isCapableOfAddingProvinces()) {
@@ -141,7 +253,7 @@ public class AreaController implements Serializable {
         JsfUtil.addSuccessMessage("New Educational Zone Saved");
         return "/area/add_area_index";
     }
-    
+
     public String saveNewPhi() {
         if (!webUserController.isCapableOfAddingPhiAreas()) {
             JsfUtil.addErrorMessage("You are not autherized");
@@ -170,11 +282,10 @@ public class AreaController implements Serializable {
             j += " and (a=:pa or a.parentArea=:pa or a.parentArea.parentArea=:pa or a.parentArea.parentArea.parentArea=:pa  or a.parentArea.parentArea.parentArea.parentArea=:pa) ";
             m.put("pa", superArea);
         }
-        j+=" order by a.name";
+        j += " order by a.name";
         System.out.println("m = " + m);
         System.out.println("j = " + j);
         List<Area> areas = getFacade().findBySQL(j, m);
-        System.out.println("areas.size() = " + areas.size());
         return areas;
     }
 
@@ -265,6 +376,14 @@ public class AreaController implements Serializable {
 
     public List<Area> getItemsAvailableSelectOne() {
         return getFacade().findAll();
+    }
+
+    public MapModel getPolygonModel() {
+        return polygonModel;
+    }
+
+    public void onPolygonSelect(OverlaySelectEvent event) {
+        JsfUtil.addSuccessMessage("Selected");
     }
 
     @FacesConverter(forClass = Area.class)

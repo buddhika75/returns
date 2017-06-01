@@ -24,5 +24,9 @@
             <base-name>/Bundle4</base-name>
             <var>bundle4</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>/Bundle2</base-name>
+            <var>bundle2</var>
+        </resource-bundle>
     </application>
 </faces-config>

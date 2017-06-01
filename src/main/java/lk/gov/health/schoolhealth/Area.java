@@ -37,6 +37,35 @@ public class Area implements Serializable {
     WebUser creater;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     Date createAt;
+    double centreLongitude;
+    double centreLatitude;
+    double zoomLavel;
+
+    public double getCentreLongitude() {
+        return centreLongitude;
+    }
+
+    public void setCentreLongitude(double centreLongitude) {
+        this.centreLongitude = centreLongitude;
+    }
+
+    public double getCentreLatitude() {
+        return centreLatitude;
+    }
+
+    public void setCentreLatitude(double centreLatitude) {
+        this.centreLatitude = centreLatitude;
+    }
+
+    public double getZoomLavel() {
+        return zoomLavel;
+    }
+
+    public void setZoomLavel(double zoomLavel) {
+        this.zoomLavel = zoomLavel;
+    }
+    
+    
     
     
 

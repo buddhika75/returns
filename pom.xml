@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>lk.gov.health.thk</groupId>
-    <artifactId>SchoolHealth</artifactId>
+    <artifactId>Returns</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
 
-    <name>SchoolHealth</name>
+    <name>Returns</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -73,6 +73,16 @@
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
         </dependency>
     </dependencies>
 

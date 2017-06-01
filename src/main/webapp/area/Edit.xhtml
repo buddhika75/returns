@@ -28,11 +28,35 @@
                                            itemValue="#{parentAreaItem}"
                                            itemLabel="#{parentAreaItem.name}"/>
                         </p:selectOneMenu>
+
+                        <p:outputLabel value="Centre Longitude"  />
+                        <p:inputText value="#{areaController.selected.centreLongitude}" />
+                        
+                        <p:outputLabel value="Centre Latitude"  />
+                        <p:inputText value="#{areaController.selected.centreLatitude}" />
+                        
+                        <p:outputLabel value="Default Zoom"  />
+                        <p:inputText value="#{areaController.selected.zoomLavel}" />
+                        
+                        
                     </p:panelGrid>
                     <p:commandButton actionListener="#{areaController.update}" value="#{bundle.Save}" update="display,:AreaListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AreaEditDialog');"/>
+                    
+                    <p:commandButton ajax="false" action="#{areaController.drawArea()}" value="Map" />
+                    
                     <p:commandButton value="#{bundle.Cancel}" onclick="AreaEditDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
+
+            <h:form enctype="multipart/form-data" >
+                <p:fileUpload value="#{areaController.file}" mode="simple"/>
+
+                <h:commandButton id="btnSave" value="Save" action="#{areaController.saveCoordinates()}"/>
+
+            </h:form>
+
+           
+
         </p:dialog>
 
     </ui:composition>
