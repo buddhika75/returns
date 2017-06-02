@@ -18,22 +18,31 @@ import javax.persistence.Id;
  * @author User
  */
 @Entity
-public class ReturnType implements Serializable {
+public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    String name;
-    String code;
     @Enumerated(EnumType.STRING)
-    ReturnTimeFrequency frequency;
-    Integer senderStartDays;
-    Integer senderSubmitDays;
-    
-    
-    
+    ItemType type;
+    String name;
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public void setType(ItemType type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -53,10 +62,10 @@ public class ReturnType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ReturnType)) {
+        if (!(object instanceof Item)) {
             return false;
         }
-        ReturnType other = (ReturnType) object;
+        Item other = (Item) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -65,7 +74,7 @@ public class ReturnType implements Serializable {
 
     @Override
     public String toString() {
-        return "lk.gov.health.schoolhealth.ReturnType[ id=" + id + " ]";
+        return "lk.gov.health.schoolhealth.Item[ id=" + id + " ]";
     }
-    
+
 }
