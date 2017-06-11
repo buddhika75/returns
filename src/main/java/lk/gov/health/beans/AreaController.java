@@ -184,7 +184,6 @@ public class AreaController implements Serializable {
             return "";
         }
         selected = new Area();
-        selected.setType(AreaType.EducationalZone);
         return "/area/add_educational_zones";
     }
 

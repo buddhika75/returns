@@ -287,7 +287,6 @@ public class WebUserController implements Serializable {
     public void fillLogginDetails() {
         if (developmentStage) {
             myAreas = areaController.getAreas(null, null);
-            myEducationalZones = areaController.getAreas(AreaType.EducationalZone, null);
             mySchools = institutionController.getInstitutions(InstitutionType.School, null, null, null);
             return;
         }
@@ -308,7 +307,6 @@ public class WebUserController implements Serializable {
                 myMohAreas.add(loggedMohArea);
                 myPhiAreas = areaController.getAreas(AreaType.PHI, loggedMohArea);
                 myAreas = areaController.getAreas(null, loggedMohArea);
-                myEducationalZones = areaController.getAreas(AreaType.EducationalZone, null);
                 mySchools = institutionController.getInstitutions(InstitutionType.School, null, loggedRdhsArea, null);
                 break;
             case MO_RDHS:
@@ -325,7 +323,6 @@ public class WebUserController implements Serializable {
                 myMohAreas = areaController.getAreas(AreaType.MOH, loggedRdhsArea);
                 myPhiAreas = areaController.getAreas(AreaType.PHI, loggedRdhsArea);
                 myAreas = areaController.getAreas(null, loggedRdhsArea);
-                myEducationalZones = areaController.getAreas(AreaType.EducationalZone, null);
                 mySchools = institutionController.getInstitutions(InstitutionType.School, null, loggedRdhsArea, null);
                 break;
             case PSPHI:
@@ -340,7 +337,6 @@ public class WebUserController implements Serializable {
                 myMohAreas = areaController.getAreas(AreaType.MOH, loggedPdhsArea);
                 myPhiAreas = areaController.getAreas(AreaType.PHI, loggedPdhsArea);
                 myAreas = areaController.getAreas(null, loggedPdhsArea);
-                myEducationalZones = areaController.getAreas(AreaType.EducationalZone, null);
                 mySchools = institutionController.getInstitutions(InstitutionType.School, null, loggedPdhsArea, null);
                 break;
             case Institution_Administrator:
@@ -352,7 +348,6 @@ public class WebUserController implements Serializable {
                 myMohAreas = areaController.getAreas(AreaType.MOH, null);
                 myPhiAreas = areaController.getAreas(AreaType.PHI, null);
                 myAreas = areaController.getAreas(null, null);
-                myEducationalZones = areaController.getAreas(AreaType.EducationalZone, null);
                 mySchools = institutionController.getInstitutions(InstitutionType.School, null, null, null);
                 break;
             case Guest:
