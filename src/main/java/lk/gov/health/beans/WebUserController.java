@@ -65,7 +65,7 @@ public class WebUserController implements Serializable {
     private WebUser loggedUser;
     private PrivilegeType loggedPrivilegeType;
     private boolean logged;
-    private boolean developmentStage = true;
+    private boolean developmentStage = false;
 
     private String userName;
     private String password;
@@ -273,7 +273,7 @@ public class WebUserController implements Serializable {
     }
 
     public List<PrivilegeType> getMyPrivilegeTypes() {
-        if(developmentStage){
+        if (developmentStage) {
             myPrivilegeTypes = new ArrayList<PrivilegeType>();
             myPrivilegeTypes.add(PrivilegeType.System_Administrator);
         }
@@ -412,7 +412,7 @@ public class WebUserController implements Serializable {
             case SPHI:
             case SPHM:
             case SPHNS:
-            
+
             case RDHS_Staff:
             case PDHS_Staff:
             case MO_School_Health:
@@ -1035,6 +1035,92 @@ public class WebUserController implements Serializable {
         return getFirstDayOfMonth(c.getTime());
     }
 
+    public Month getLastMonth() {
+        return getLastMonth(new Date());
+    }
+    
+    public Month getLastMonth(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, -1);
+        int month = c.get(Calendar.MONTH);
+        return getMonthFromInt(month);
+    }
+
+    public List<Integer> getRecentYears(){
+        List<Integer> ys = new ArrayList<Integer>();
+        ys.add(getThisYear());
+        ys.add(getThisYear()-1);
+        ys.add(getThisYear()-2);
+        ys.add(getThisYear()-3);
+        return ys;
+    }
+    
+    public int getThisYear() {
+        return getThisYear(new Date());
+    }
+
+    public int getThisYear(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        int year = c.get(Calendar.YEAR);
+        return year;
+    }
+    
+    public int getLastYear() {
+        return getLastYear(new Date());
+    }
+
+    public int getLastYear(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.YEAR, -1);
+        int year = c.get(Calendar.YEAR);
+        return year;
+    }
+    
+    public Quarter getLastQuarterFromDate(Date date) {
+        Quarter q = getQuarterFromDate(date);
+        switch (q) {
+            case First:
+                return Quarter.Forth;
+            case Second:
+                return Quarter.First;
+            case Thired:
+                return Quarter.Second;
+            case Forth:
+                return Quarter.Thired;
+        }
+        return null;
+    }
+
+    public Quarter getQuarterFromDate(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, -1);
+        int month = c.get(Calendar.MONTH);
+        switch (month) {
+            case Calendar.JANUARY:
+            case Calendar.FEBRUARY:
+            case Calendar.MARCH:
+                return Quarter.First;
+            case Calendar.APRIL:
+            case Calendar.MAY:
+            case Calendar.JUNE:
+                return Quarter.Second;
+            case Calendar.JULY:
+            case Calendar.AUGUST:
+            case Calendar.SEPTEMBER:
+                return Quarter.Thired;
+            case Calendar.OCTOBER:
+            case Calendar.NOVEMBER:
+            case Calendar.DECEMBER:
+                return Quarter.Forth;
+
+        }
+        return null;
+    }
+
     public Integer getIntMonth(Month month) {
         switch (month) {
             case January:
@@ -1061,6 +1147,36 @@ public class WebUserController implements Serializable {
                 return Calendar.NOVEMBER;
             case December:
                 return Calendar.DECEMBER;
+        }
+        return null;
+    }
+
+    public Month getMonthFromInt(int month) {
+        switch (month) {
+            case Calendar.JANUARY:
+                return Month.January;
+            case Calendar.FEBRUARY:
+                return Month.February;
+            case Calendar.MARCH:
+                return Month.March;
+            case Calendar.APRIL:
+                return Month.April;
+            case Calendar.MAY:
+                return Month.May;
+            case Calendar.JUNE:
+                return Month.June;
+            case Calendar.JULY:
+                return Month.July;
+            case Calendar.AUGUST:
+                return Month.August;
+            case Calendar.SEPTEMBER:
+                return Month.September;
+            case Calendar.OCTOBER:
+                return Month.October;
+            case Calendar.NOVEMBER:
+                return Month.November;
+            case Calendar.DECEMBER:
+                return Month.December;
         }
         return null;
     }

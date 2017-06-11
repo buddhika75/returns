@@ -28,14 +28,15 @@
                                            itemValue="#{categoryItem}"
                                            itemLabel="#{categoryItem.name}"/>
                         </p:selectOneMenu>
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_senderStartDays}" for="senderStartDays" />
-                        <p:inputText id="senderStartDays" value="#{returnFormatController.selected.senderStartDays}" title="#{bundleReturns.CreateReturnFormatTitle_senderStartDays}" />
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_senderSubmitDays}" for="senderSubmitDays" />
-                        <p:inputText id="senderSubmitDays" value="#{returnFormatController.selected.senderSubmitDays}" title="#{bundleReturns.CreateReturnFormatTitle_senderSubmitDays}" />
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_sendingDeadline}" for="sendingDeadline" />
-                        <p:inputText id="sendingDeadline" value="#{returnFormatController.selected.sendingDeadline}" title="#{bundleReturns.CreateReturnFormatTitle_sendingDeadline}" />
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_prepairedBy}" for="prepairedBy" />
+                        
+                        <p:outputLabel value="Submit Months"/>
+                        <p:inputText  value="#{returnFormatController.selected.sendingDeadlineMonths}" />
 
+                        <p:outputLabel value="Submit Days" for="sendingDeadline" />
+                        <p:inputText id="sendingDeadline" value="#{returnFormatController.selected.sendingDeadlineDays}" title="#{bundleReturns.CreateReturnFormatTitle_sendingDeadline}" />
+
+
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_prepairedBy}" for="prepairedBy" />
                         <p:selectOneMenu id="prepairedBy" value="#{returnFormatController.selected.prepairedBy}" >
                             <f:selectItems value="#{enumController.privilegeTypes}" ></f:selectItems>
                         </p:selectOneMenu>
@@ -52,12 +53,10 @@
                         </p:selectOneMenu>                      
 
 
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receiveStartDays}" for="receiveStartDays" />
-                        <p:inputText id="receiveStartDays" value="#{returnFormatController.selected.receiveStartDays}" title="#{bundleReturns.CreateReturnFormatTitle_receiveStartDays}" />
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receiveSubmitDays}" for="receiveSubmitDays" />
-                        <p:inputText id="receiveSubmitDays" value="#{returnFormatController.selected.receiveSubmitDays}" title="#{bundleReturns.CreateReturnFormatTitle_receiveSubmitDays}" />
-                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receiveDeadline}" for="receiveDeadline" />
-                        <p:inputText id="receiveDeadline" value="#{returnFormatController.selected.receiveDeadline}" title="#{bundleReturns.CreateReturnFormatTitle_receiveDeadline}" />
+                        <p:outputLabel value="Receive Months" for="receiveStartDays" />
+                        <p:inputText id="receiveStartDays" value="#{returnFormatController.selected.receivingDeadlineMonths}" title="#{bundleReturns.CreateReturnFormatTitle_receiveStartDays}" />
+                        <p:outputLabel value="Receive Days" for="receiveSubmitDays" />
+                        <p:inputText id="receiveSubmitDays" value="#{returnFormatController.selected.receivingDeadlineDays}" title="#{bundleReturns.CreateReturnFormatTitle_receiveSubmitDays}" />
 
                         <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_sendingAreaType}" for="sendingAreaType" />
                         <p:selectOneMenu id="sendingAreaType" value="#{returnFormatController.selected.sendingAreaType}" >

@@ -13,8 +13,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -27,7 +29,7 @@ public class ReturnSubmission implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @ManyToOne
     ReturnFormat returnFormat;
     Quarter quarter;
@@ -43,6 +45,10 @@ public class ReturnSubmission implements Serializable {
     Date sentDate;
     @ManyToOne
     Area sentArea;
+
+    @Lob
+    String sentComments;
+
     @ManyToOne
     WebUser prepairedBy;
     @ManyToOne
@@ -51,10 +57,12 @@ public class ReturnSubmission implements Serializable {
     WebUser receivedBy;
     @Temporal(javax.persistence.TemporalType.DATE)
     Date receiveDate;
-    AreaType receiveArea;
+    @ManyToOne
+    Area receiveArea;
 
-    
-    
+    @Lob
+    String receiveComments;
+
     public Long getId() {
         return id;
     }
@@ -159,16 +167,33 @@ public class ReturnSubmission implements Serializable {
         this.receiveDate = receiveDate;
     }
 
-    public AreaType getReceiveArea() {
+    public Area getReceiveArea() {
         return receiveArea;
     }
 
-    public void setReceiveArea(AreaType receiveArea) {
+    public void setReceiveArea(Area receiveArea) {
         this.receiveArea = receiveArea;
     }
 
+    public String getSentComments() {
+        return sentComments;
+    }
+
+    public void setSentComments(String sentComments) {
+        this.sentComments = sentComments;
+    }
+
+    public String getReceiveComments() {
+        return receiveComments;
+    }
+
+    public void setReceiveComments(String receiveComments) {
+        this.receiveComments = receiveComments;
+    }
     
     
+    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -193,5 +218,5 @@ public class ReturnSubmission implements Serializable {
     public String toString() {
         return "lk.gov.health.schoolhealth.ReturnSubmission[ id=" + id + " ]";
     }
-    
+
 }

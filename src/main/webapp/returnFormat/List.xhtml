@@ -49,31 +49,7 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundleReturns.ListReturnFormatTitle_category}"/>
                             </f:facet>
-                            <h:outputText value="#{item.category}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_senderStartDays}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.senderStartDays}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_senderSubmitDays}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.senderSubmitDays}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_sendingDeadline}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.sendingDeadline}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_prepairedBy}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.prepairedBy}"/>
+                            <h:outputText value="#{item.category.name}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
@@ -87,37 +63,6 @@
                             </f:facet>
                             <h:outputText value="#{item.receivedBy}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_receiveStartDays}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.receiveStartDays}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_receiveSubmitDays}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.receiveSubmitDays}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_receiveDeadline}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.receiveDeadline}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_sendingAreaType}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.sendingAreaType}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_receivingAreaType}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.receivingAreaType}"/>
-                        </p:column>
-                       
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundleReturns.Create}" actionListener="#{returnFormatController.prepareCreate}" update=":ReturnFormatCreateForm" oncomplete="PF('ReturnFormatCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundleReturns.View}" update=":ReturnFormatViewForm" oncomplete="PF('ReturnFormatViewDialog').show()" disabled="#{empty returnFormatController.selected}"/>

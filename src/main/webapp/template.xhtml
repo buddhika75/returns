@@ -23,7 +23,7 @@
                     <p:menubar rendered="#{webUserController.logged}">
                         <p:menuitem value="#{bundle.Home}" outcome="/index" icon="ui-icon-home"/>
                         <p:submenu label="Actions">
-                            <p:menuitem value="Summery of School Medical Inspections" action="/summeryOfSchoolMedicalInspection/index" />
+                            <p:menuitem value="Submit New Return" action="#{returnSubmissionController.toSubmitNewReport()}" />
                             <p:menuitem value="Monthly Statements" action="/monthlyStatementOfSchoolHealthActivities/index" />
                             <p:menuitem value="Quartely Returns" action="/quarterlySchoolHealthReturn/index" />
                         </p:submenu>

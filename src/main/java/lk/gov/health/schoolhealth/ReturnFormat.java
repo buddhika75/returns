@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 /**
  *
@@ -25,27 +26,110 @@ public class ReturnFormat implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     String name;
     String code;
     @Enumerated(EnumType.STRING)
     ReturnTimeFrequency frequency;
     @ManyToOne
     Item category;
+
+    @Deprecated
     Integer senderStartDays;
-    Integer senderSubmitDays;
-    Integer sendingDeadline;
+
+    Integer sendingDeadlineMonths;
+    Integer sendingDeadlineDays;
+
     AreaType sendingAreaType;
+
     PrivilegeType prepairedBy;
     PrivilegeType sentBy;
+
     PrivilegeType receivedBy;
-    Integer receiveStartDays;
-    Integer receiveSubmitDays;
+    Integer receivingDeadlineMonths;
+    Integer receivingDeadlineDays;
+
+    @Deprecated
     Integer receiveDeadline;
+
     AreaType receivingAreaType;
-    
-    
-    
+
+    @Transient
+    boolean needYear;
+
+    @Transient
+    boolean needQuarter;
+
+    @Transient
+    boolean needMonth;
+
+    @Transient
+    boolean needWeek;
+
+    @Transient
+    boolean needFromDate;
+
+    @Transient
+    boolean needToDate;
+
+    public boolean isNeedYear() {
+        if (frequency == ReturnTimeFrequency.Annual || frequency == ReturnTimeFrequency.Monthly || frequency == ReturnTimeFrequency.Quarterly) {
+            needYear = true;
+        } else {
+            needYear = false;
+        }
+        return needYear;
+    }
+
+    public boolean isNeedQuarter() {
+        if (frequency == ReturnTimeFrequency.Quarterly) {
+            needQuarter = true;
+        } else {
+            needQuarter = false;
+        }
+
+        return needQuarter;
+    }
+
+    public boolean isNeedMonth() {
+        if (frequency == ReturnTimeFrequency.Monthly) {
+            needMonth = true;
+        } else {
+            needMonth = false;
+        }
+
+        return needMonth;
+    }
+
+    public boolean isNeedWeek() {
+        if (frequency == ReturnTimeFrequency.Weekely) {
+            needWeek = true;
+        } else {
+            needWeek = false;
+        }
+        return needWeek;
+    }
+
+    public boolean isNeedFromDate() {
+        if (frequency == ReturnTimeFrequency.Weekely) {
+            needFromDate = true;
+        } else {
+            needFromDate = false;
+        }
+
+        return needFromDate;
+    }
+
+    public boolean isNeedToDate() {
+        if (frequency == ReturnTimeFrequency.Weekely) {
+            needToDate = true;
+        } else {
+            needToDate = false;
+        }
+
+        return needToDate;
+    }
+
     public String getName() {
         return name;
     }
@@ -86,20 +170,20 @@ public class ReturnFormat implements Serializable {
         this.senderStartDays = senderStartDays;
     }
 
-    public Integer getSenderSubmitDays() {
-        return senderSubmitDays;
+    public Integer getSendingDeadlineMonths() {
+        return sendingDeadlineMonths;
     }
 
-    public void setSenderSubmitDays(Integer senderSubmitDays) {
-        this.senderSubmitDays = senderSubmitDays;
+    public void setSendingDeadlineMonths(Integer sendingDeadlineMonths) {
+        this.sendingDeadlineMonths = sendingDeadlineMonths;
     }
 
-    public Integer getSendingDeadline() {
-        return sendingDeadline;
+    public Integer getSendingDeadlineDays() {
+        return sendingDeadlineDays;
     }
 
-    public void setSendingDeadline(Integer sendingDeadline) {
-        this.sendingDeadline = sendingDeadline;
+    public void setSendingDeadlineDays(Integer sendingDeadlineDays) {
+        this.sendingDeadlineDays = sendingDeadlineDays;
     }
 
     public PrivilegeType getPrepairedBy() {
@@ -126,20 +210,20 @@ public class ReturnFormat implements Serializable {
         this.receivedBy = receivedBy;
     }
 
-    public Integer getReceiveStartDays() {
-        return receiveStartDays;
+    public Integer getReceivingDeadlineMonths() {
+        return receivingDeadlineMonths;
     }
 
-    public void setReceiveStartDays(Integer receiveStartDays) {
-        this.receiveStartDays = receiveStartDays;
+    public void setReceivingDeadlineMonths(Integer receivingDeadlineMonths) {
+        this.receivingDeadlineMonths = receivingDeadlineMonths;
     }
 
-    public Integer getReceiveSubmitDays() {
-        return receiveSubmitDays;
+    public Integer getReceivingDeadlineDays() {
+        return receivingDeadlineDays;
     }
 
-    public void setReceiveSubmitDays(Integer receiveSubmitDays) {
-        this.receiveSubmitDays = receiveSubmitDays;
+    public void setReceivingDeadlineDays(Integer receivingDeadlineDays) {
+        this.receivingDeadlineDays = receivingDeadlineDays;
     }
 
     public Integer getReceiveDeadline() {
@@ -165,9 +249,6 @@ public class ReturnFormat implements Serializable {
     public void setReceivingAreaType(AreaType receivingAreaType) {
         this.receivingAreaType = receivingAreaType;
     }
-    
-    
-    
 
     public Long getId() {
         return id;
@@ -201,5 +282,5 @@ public class ReturnFormat implements Serializable {
     public String toString() {
         return "lk.gov.health.schoolhealth.ReturnType[ id=" + id + " ]";
     }
-    
+
 }

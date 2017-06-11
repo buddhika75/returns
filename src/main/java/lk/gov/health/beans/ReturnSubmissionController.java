@@ -6,6 +6,7 @@ import lk.gov.health.beans.util.JsfUtil.PersistAction;
 import lk.gov.health.faces.ReturnSubmissionFacade;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -18,16 +19,99 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
+import lk.gov.health.schoolhealth.AreaType;
+import lk.gov.health.schoolhealth.Month;
+import lk.gov.health.schoolhealth.Quarter;
+import lk.gov.health.schoolhealth.ReturnFormat;
+import lk.gov.health.schoolhealth.ReturnTimeFrequency;
 
 @Named("returnSubmissionController")
 @SessionScoped
 public class ReturnSubmissionController implements Serializable {
 
+    @Inject
+    WebUserController webUserController;
     @EJB
     private lk.gov.health.faces.ReturnSubmissionFacade ejbFacade;
     private List<ReturnSubmission> items = null;
     private ReturnSubmission selected;
 
+    ReturnFormat returnFormat;
+    int year;
+    Month month;
+    Quarter quarter;
+    Date date;
+    
+    
+    public String toReceiveReturns(){
+        return "/returnSubmission/receive_returns";
+    }
+    
+    public String toSubmitNewReport(){
+        selected = new ReturnSubmission();
+        return "/returnSubmission/submit_new_report";
+    }
+    
+    public String toSubmitNewReportAfterSelection(){
+        if(returnFormat==null){
+            JsfUtil.addErrorMessage("Select a Return");
+            return "";
+        }
+        selected.setReturnFormat(returnFormat);
+        selected.setSentDate(new Date());
+        
+        if(selected.getReturnFormat().getSendingAreaType()==null || selected.getReturnFormat().getSendingAreaType()==AreaType.MOH){
+            selected.setSentArea(webUserController.getLoggedMohArea());
+        }
+        if(selected.getReturnFormat().getReceivingAreaType()==null || selected.getReturnFormat().getReceivingAreaType()==AreaType.District){
+            selected.setReceiveArea(webUserController.getLoggedRdhsArea());
+        }
+        
+        selected.setReceiveArea(webUserController.getLoggedRdhsArea());
+        
+        if(null==selected.getReturnFormat().getFrequency()){
+            return "Still Under Development";
+        }else switch (returnFormat.getFrequency()) {
+            case Annual:
+                selected.setReturnYear(webUserController.getLastYear());
+                break;
+            case Quarterly:
+                selected.setQuarter(webUserController.getLastQuarterFromDate(new Date()));
+                if(selected.getQuarter()==Quarter.Forth){
+                    selected.setReturnYear(webUserController.getLastYear());
+                }else{
+                    selected.setReturnYear(webUserController.getThisYear());
+                }   break;
+            case Monthly:
+                selected.setReturnMonth(webUserController.getLastMonth(new Date()));
+                if(selected.getReturnMonth()==Month.December){
+                    selected.setReturnYear(webUserController.getLastYear());
+                }else{
+                    selected.setReturnYear(webUserController.getThisYear());
+                }   break;
+            case Weekely:
+                return "Still Under Development";
+            default:
+                return "Still Under Development";
+        }
+        return "/returnSubmission/submit_new_report_selected";
+    }
+    
+    public String submitReturn(){
+        
+        if(selected.getId()==null){
+            selected.setSentBy(webUserController.getLoggedUser());
+            getFacade().create(selected);
+            JsfUtil.addSuccessMessage("Submitted");
+        }else{
+            getFacade().edit(selected);
+            JsfUtil.addSuccessMessage("Submission Updated");
+        }
+        return "/index";
+    }
+    
+    
     public ReturnSubmissionController() {
     }
 
@@ -121,6 +205,51 @@ public class ReturnSubmissionController implements Serializable {
         return getFacade().findAll();
     }
 
+    public ReturnFormat getReturnFormat() {
+        return returnFormat;
+    }
+
+    public void setReturnFormat(ReturnFormat returnFormat) {
+        this.returnFormat = returnFormat;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public void setMonth(Month month) {
+        this.month = month;
+    }
+
+    public Quarter getQuarter() {
+        return quarter;
+    }
+
+    public void setQuarter(Quarter quarter) {
+        this.quarter = quarter;
+    }
+
+    public Date getDate() {
+        if(date==null){
+            date = new Date();
+        }
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    
+    
     @FacesConverter(forClass = ReturnSubmission.class)
     public static class ReturnSubmissionControllerConverter implements Converter {
 
