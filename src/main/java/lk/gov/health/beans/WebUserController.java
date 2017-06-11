@@ -252,6 +252,9 @@ public class WebUserController implements Serializable {
         myPrivilegeTypes.add(PrivilegeType.MO_RDHS);
         myPrivilegeTypes.add(PrivilegeType.DSPHI);
         myPrivilegeTypes.add(PrivilegeType.RDHS_Staff);
+        myPrivilegeTypes.add(PrivilegeType.MO_MCH);
+        myPrivilegeTypes.add(PrivilegeType.MO_Planning_RDHS);
+        myPrivilegeTypes.add(PrivilegeType.MO_School_Health);
     }
 
     private void addPdhsPrivileges() {
@@ -299,6 +302,7 @@ public class WebUserController implements Serializable {
             case RMO_AMO:
             case MO:
             case MOH_Staff:
+
                 loggedMohArea = loggedUser.getArea();
                 loggedRdhsArea = loggedMohArea.getParentArea();
                 loggedPdhsArea = loggedRdhsArea.getParentArea();
@@ -316,6 +320,9 @@ public class WebUserController implements Serializable {
             case DSPHI:
             case DSPHM:
             case MO_School_Health:
+            case MO_MCH:
+            case MO_Planning_RDHS:
+            case Regional_Epidemiologist:
                 loggedRdhsArea = loggedUser.getArea();
                 loggedPdhsArea = loggedRdhsArea.getParentArea();
                 myProvinces.add(loggedPdhsArea);
@@ -1038,7 +1045,7 @@ public class WebUserController implements Serializable {
     public Month getLastMonth() {
         return getLastMonth(new Date());
     }
-    
+
     public Month getLastMonth(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -1047,15 +1054,15 @@ public class WebUserController implements Serializable {
         return getMonthFromInt(month);
     }
 
-    public List<Integer> getRecentYears(){
+    public List<Integer> getRecentYears() {
         List<Integer> ys = new ArrayList<Integer>();
         ys.add(getThisYear());
-        ys.add(getThisYear()-1);
-        ys.add(getThisYear()-2);
-        ys.add(getThisYear()-3);
+        ys.add(getThisYear() - 1);
+        ys.add(getThisYear() - 2);
+        ys.add(getThisYear() - 3);
         return ys;
     }
-    
+
     public int getThisYear() {
         return getThisYear(new Date());
     }
@@ -1066,7 +1073,7 @@ public class WebUserController implements Serializable {
         int year = c.get(Calendar.YEAR);
         return year;
     }
-    
+
     public int getLastYear() {
         return getLastYear(new Date());
     }
@@ -1078,7 +1085,7 @@ public class WebUserController implements Serializable {
         int year = c.get(Calendar.YEAR);
         return year;
     }
-    
+
     public Quarter getLastQuarterFromDate(Date date) {
         Quarter q = getQuarterFromDate(date);
         switch (q) {

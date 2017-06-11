@@ -6,8 +6,11 @@ import lk.gov.health.beans.util.JsfUtil.PersistAction;
 import lk.gov.health.faces.ReturnSubmissionFacade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +27,6 @@ import lk.gov.health.schoolhealth.AreaType;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.Quarter;
 import lk.gov.health.schoolhealth.ReturnFormat;
-import lk.gov.health.schoolhealth.ReturnTimeFrequency;
 
 @Named("returnSubmissionController")
 @SessionScoped
@@ -37,6 +39,7 @@ public class ReturnSubmissionController implements Serializable {
     private List<ReturnSubmission> items = null;
     private ReturnSubmission selected;
 
+    
     ReturnFormat returnFormat;
     int year;
     Month month;
@@ -45,7 +48,39 @@ public class ReturnSubmissionController implements Serializable {
     
     
     public String toReceiveReturns(){
+        items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/receive_returns";
+    }
+    
+    public String listPendingRetunrsToReceive(){
+        if(returnFormat==null){
+            JsfUtil.addErrorMessage("Select a return format");
+            return "";
+        }
+        String j;
+        Map m = new HashMap();
+        j = "select r from ReturnSubmission r "
+                + " where r.returnFormat=:rf "
+                + " and r.receiveArea=:ra "
+                + " and r.receiveDate is null";
+        m.put("rf", returnFormat);
+        m.put("ra", webUserController.getLoggedRdhsArea());
+        items = getFacade().findBySQL(j, m);
+        return "";
+    }
+    
+    public String markAsReceived(){
+        if(selected==null){
+            JsfUtil.addErrorMessage("Please select a return");
+            return "";
+        }
+        selected.setReceiveArea(webUserController.getLoggedRdhsArea());
+        selected.setReceiveDate(new Date());
+        selected.setReceivedBy(webUserController.getLoggedUser());
+        getFacade().edit(selected);
+        listPendingRetunrsToReceive();
+        JsfUtil.addSuccessMessage("Received");
+        return "";
     }
     
     public String toSubmitNewReport(){
