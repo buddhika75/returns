@@ -32,6 +32,7 @@ public class ReturnSubmission implements Serializable {
 
     @ManyToOne
     ReturnFormat returnFormat;
+    @Enumerated(EnumType.STRING)
     Quarter quarter;
     @Enumerated(EnumType.STRING)
     Month returnMonth;
@@ -62,6 +63,20 @@ public class ReturnSubmission implements Serializable {
 
     @Lob
     String receiveComments;
+    
+    @Enumerated(EnumType.STRING)
+    ReturnReceiveCategory returnReceiveCategory;
+
+    public ReturnReceiveCategory getReturnReceiveCategory() {
+        return returnReceiveCategory;
+    }
+
+    public void setReturnReceiveCategory(ReturnReceiveCategory returnReceiveCategory) {
+        this.returnReceiveCategory = returnReceiveCategory;
+    }
+    
+    
+    
 
     public Long getId() {
         return id;

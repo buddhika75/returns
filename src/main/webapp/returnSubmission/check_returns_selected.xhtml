@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template.xhtml">
+
+            <ui:define name="title">
+                Submit a new Return
+            </ui:define>
+
+            <ui:define name="body">
+
+                <h:form >
+
+                    <p:panel header="Check Returns - Step 2" >
+                        <p:panelGrid columns="2" >
+                            <p:outputLabel value="Return" ></p:outputLabel>
+                            <p:outputLabel value="#{returnSubmissionController.returnFormat.name} - #{returnSubmissionController.returnFormat.code}" ></p:outputLabel>
+
+                            <p:outputLabel value="Year" rendered="#{returnSubmissionController.returnFormat.needYear}"></p:outputLabel>
+                            <p:selectOneMenu value="#{returnSubmissionController.year}" rendered="#{returnSubmissionController.returnFormat.needYear}">
+                                <f:selectItems value="#{webUserController.recentYears}" ></f:selectItems>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Month" rendered="#{returnSubmissionController.returnFormat.needMonth}"></p:outputLabel>
+                            <p:selectOneMenu value="#{returnSubmissionController.month}"  rendered="#{returnSubmissionController.returnFormat.needMonth}">
+                                <f:selectItems value="#{enumController.months}" ></f:selectItems>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Quarter" rendered="#{returnSubmissionController.returnFormat.needQuarter}"></p:outputLabel>
+                            <p:selectOneMenu value="#{returnSubmissionController.quarter}"  rendered="#{returnSubmissionController.returnFormat.needQuarter}">
+                                <f:selectItems value="#{enumController.quarters}" ></f:selectItems>
+                            </p:selectOneMenu>
+
+
+
+
+                        </p:panelGrid>
+                        <p:commandButton ajax="false" value="List" action="#{returnSubmissionController.listReceivedReturns()}" ></p:commandButton>
+                        <p:commandButton ajax="false" value="Back" action="#{returnSubmissionController.toCheckReturns()}" ></p:commandButton>
+
+
+                        <p:tabView >
+                            <p:tab title="List of Received Returns" >
+                                <p:dataTable value="#{returnSubmissionController.items}" var="item">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Sent Date"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.sentDate}">
+                                            <f:convertDateTime pattern="dd MMMM yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Area"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.sentArea.name}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Sent Date"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.sentDate}">
+                                            <f:convertDateTime pattern="dd MMMM yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Received Date"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.receiveDate}">
+                                            <f:convertDateTime pattern="dd MMMM yyyy" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Sent Comments"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.sentComments}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Receive Comments"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.receiveComments}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab title="Responders &amp; Non-Responders List" >
+
+                            </p:tab>
+                            <p:tab title="Timeline" >
+
+                            </p:tab>
+                            <p:tab title="Map" >
+
+                            </p:tab>
+
+
+
+                        </p:tabView>
+
+
+
+
+                    </p:panel>
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

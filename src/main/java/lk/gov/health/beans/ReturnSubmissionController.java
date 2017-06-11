@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
+import lk.gov.health.schoolhealth.Area;
 import lk.gov.health.schoolhealth.AreaType;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.Quarter;
@@ -39,21 +40,21 @@ public class ReturnSubmissionController implements Serializable {
     private List<ReturnSubmission> items = null;
     private ReturnSubmission selected;
 
-    
     ReturnFormat returnFormat;
     int year;
     Month month;
     Quarter quarter;
     Date date;
     
-    
-    public String toReceiveReturns(){
+    List<Area> mySendingAreas;
+
+    public String toReceiveReturns() {
         items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/receive_returns";
     }
-    
-    public String listPendingRetunrsToReceive(){
-        if(returnFormat==null){
+
+    public String listPendingRetunrsToReceive() {
+        if (returnFormat == null) {
             JsfUtil.addErrorMessage("Select a return format");
             return "";
         }
@@ -68,9 +69,66 @@ public class ReturnSubmissionController implements Serializable {
         items = getFacade().findBySQL(j, m);
         return "";
     }
+
+    public String listReceivedReturns() {
+        if (returnFormat == null) {
+            JsfUtil.addErrorMessage("Select a return format");
+            return "";
+        }
+        String j;
+        Map m = new HashMap();
+        j = "select r from ReturnSubmission r "
+                + " where r.returnFormat=:rf "
+                + " and r.receiveArea=:ra "
+                + " and r.receiveDate is not null ";
+
+        if (returnFormat.isNeedYear()) {
+            j += " and r.returnYear=:ry ";
+            m.put("ry", year);
+        }
+
+        if (returnFormat.isNeedQuarter()) {
+            j += " and r.quarter=:rq ";
+            m.put("rq", quarter);
+        }
+
+        if (returnFormat.isNeedMonth()) {
+            j += " and r.returnMonth=:rm ";
+            m.put("rm", month);
+        }
+
+        j += " order by r.receiveDate";
+        m.put("rf", returnFormat);
+        m.put("ra", webUserController.getLoggedRdhsArea());
+        items = getFacade().findBySQL(j, m);
+        fillMySendingAreas();
+        markAreasForReceiving();
+        markTimelineForReceiving();
+        markMapForReceiving();
+        return "";
+    }
+
+    private void fillMySendingAreas(){
+        mySendingAreas = webUserController.myMohAreas;
+    }
     
-    public String markAsReceived(){
-        if(selected==null){
+    private void markAreasForReceiving(){
+        
+    }
+    
+    private void markTimelineForReceiving(){
+        
+    }
+    
+    private void markMapForReceiving(){
+        
+    }
+    
+    
+    
+    
+    public String markAsReceived() {
+        if (selected == null) {
             JsfUtil.addErrorMessage("Please select a return");
             return "";
         }
@@ -82,71 +140,126 @@ public class ReturnSubmissionController implements Serializable {
         JsfUtil.addSuccessMessage("Received");
         return "";
     }
-    
-    public String toSubmitNewReport(){
+
+    public String toSubmitNewReport() {
         selected = new ReturnSubmission();
         return "/returnSubmission/submit_new_report";
     }
-    
-    public String toSubmitNewReportAfterSelection(){
-        if(returnFormat==null){
+
+    public String toCheckReturns() {
+        items = new ArrayList<ReturnSubmission>();
+        return "/returnSubmission/check_returns";
+    }
+
+    public String toSubmitNewReportAfterSelection() {
+        if (returnFormat == null) {
             JsfUtil.addErrorMessage("Select a Return");
             return "";
         }
         selected.setReturnFormat(returnFormat);
         selected.setSentDate(new Date());
-        
-        if(selected.getReturnFormat().getSendingAreaType()==null || selected.getReturnFormat().getSendingAreaType()==AreaType.MOH){
+
+        if (selected.getReturnFormat().getSendingAreaType() == null || selected.getReturnFormat().getSendingAreaType() == AreaType.MOH) {
             selected.setSentArea(webUserController.getLoggedMohArea());
         }
-        if(selected.getReturnFormat().getReceivingAreaType()==null || selected.getReturnFormat().getReceivingAreaType()==AreaType.District){
+        if (selected.getReturnFormat().getReceivingAreaType() == null || selected.getReturnFormat().getReceivingAreaType() == AreaType.District) {
             selected.setReceiveArea(webUserController.getLoggedRdhsArea());
         }
-        
+
         selected.setReceiveArea(webUserController.getLoggedRdhsArea());
-        
-        if(null==selected.getReturnFormat().getFrequency()){
-            return "Still Under Development";
-        }else switch (returnFormat.getFrequency()) {
-            case Annual:
-                selected.setReturnYear(webUserController.getLastYear());
-                break;
-            case Quarterly:
-                selected.setQuarter(webUserController.getLastQuarterFromDate(new Date()));
-                if(selected.getQuarter()==Quarter.Forth){
+
+        if (null == selected.getReturnFormat().getFrequency()) {
+            JsfUtil.addErrorMessage("Still Under Development");
+            return "";
+
+        } else {
+            switch (returnFormat.getFrequency()) {
+                case Annual:
                     selected.setReturnYear(webUserController.getLastYear());
-                }else{
-                    selected.setReturnYear(webUserController.getThisYear());
-                }   break;
-            case Monthly:
-                selected.setReturnMonth(webUserController.getLastMonth(new Date()));
-                if(selected.getReturnMonth()==Month.December){
-                    selected.setReturnYear(webUserController.getLastYear());
-                }else{
-                    selected.setReturnYear(webUserController.getThisYear());
-                }   break;
-            case Weekely:
-                return "Still Under Development";
-            default:
-                return "Still Under Development";
+                    break;
+                case Quarterly:
+                    selected.setQuarter(webUserController.getLastQuarterFromDate(new Date()));
+                    if (selected.getQuarter() == Quarter.Forth) {
+                        selected.setReturnYear(webUserController.getLastYear());
+                    } else {
+                        selected.setReturnYear(webUserController.getThisYear());
+                    }
+                    break;
+                case Monthly:
+                    selected.setReturnMonth(webUserController.getLastMonth(new Date()));
+                    if (selected.getReturnMonth() == Month.December) {
+                        selected.setReturnYear(webUserController.getLastYear());
+                    } else {
+                        selected.setReturnYear(webUserController.getThisYear());
+                    }
+                    break;
+                case Weekely:
+                    JsfUtil.addErrorMessage("Still Under Development");
+                    return "";
+                default:
+                    JsfUtil.addErrorMessage("Still Under Development");
+                    return "";
+
+            }
         }
         return "/returnSubmission/submit_new_report_selected";
     }
-    
-    public String submitReturn(){
-        
-        if(selected.getId()==null){
+
+    public String toCheckReturnAfterSelection() {
+        if (returnFormat == null) {
+            JsfUtil.addErrorMessage("Select a Return");
+            return "";
+        }
+
+        if (null == returnFormat.getFrequency()) {
+            JsfUtil.addErrorMessage("Still Under Development");
+            return "";
+        } else {
+            switch (returnFormat.getFrequency()) {
+                case Annual:
+                    year = webUserController.getLastYear();
+                    break;
+                case Quarterly:
+                    quarter = webUserController.getLastQuarterFromDate(new Date());
+                    if (quarter == Quarter.Forth) {
+                        year = webUserController.getLastYear();
+                    } else {
+                        year = webUserController.getThisYear();
+                    }
+                    break;
+                case Monthly:
+                    month = webUserController.getLastMonth(new Date());
+                    if (month == Month.December) {
+                        year = webUserController.getLastYear();
+                    } else {
+                        year = webUserController.getThisYear();
+                    }
+                    break;
+                case Weekely:
+                    JsfUtil.addErrorMessage("Still Under Development");
+                    return "";
+                default:
+                    JsfUtil.addErrorMessage("Still Under Development");
+                    return "";
+
+            }
+        }
+        return "/returnSubmission/check_returns_selected";
+    }
+
+    public String submitReturn() {
+
+        if (selected.getId() == null) {
             selected.setSentBy(webUserController.getLoggedUser());
             getFacade().create(selected);
             JsfUtil.addSuccessMessage("Submitted");
-        }else{
+        } else {
             getFacade().edit(selected);
             JsfUtil.addSuccessMessage("Submission Updated");
         }
         return "/index";
     }
-    
-    
+
     public ReturnSubmissionController() {
     }
 
@@ -273,7 +386,7 @@ public class ReturnSubmissionController implements Serializable {
     }
 
     public Date getDate() {
-        if(date==null){
+        if (date == null) {
             date = new Date();
         }
         return date;
@@ -283,8 +396,6 @@ public class ReturnSubmissionController implements Serializable {
         this.date = date;
     }
 
-    
-    
     @FacesConverter(forClass = ReturnSubmission.class)
     public static class ReturnSubmissionControllerConverter implements Converter {
 

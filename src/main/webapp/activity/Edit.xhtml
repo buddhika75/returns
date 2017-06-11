@@ -24,7 +24,7 @@
                                            itemValue="#{institutionItem}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="#{bundle.EditActivityLabel_activityDate}" for="activityDate" />
-                        <p:calendar id="activityDate" pattern="MM/dd/yyyy" value="#{activityController.selected.activityDate}" title="#{bundle.EditActivityTitle_activityDate}"  showOn="button"/>
+                        <p:calendar id="activityDate" pattern="dd MMMM yyyy" value="#{activityController.selected.activityDate}" title="#{bundle.EditActivityTitle_activityDate}"  showOn="button"/>
                         <p:outputLabel value="#{bundle.EditActivityLabel_studentParticipation}" for="studentParticipation" />
                         <p:inputText id="studentParticipation" value="#{activityController.selected.studentParticipation}" title="#{bundle.EditActivityTitle_studentParticipation}" />
                         <p:outputLabel value="#{bundle.EditActivityLabel_teacherParticpation}" for="teacherParticpation" />
