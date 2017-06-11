@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ReturnFormatCreateDlg" widgetVar="ReturnFormatCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleReturns.CreateReturnFormatTitle}">
+            <h:form id="ReturnFormatCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{returnFormatController.selected != null}">
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{returnFormatController.selected.name}" title="#{bundleReturns.CreateReturnFormatTitle_name}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_code}" for="code" />
+                        <p:inputText id="code" value="#{returnFormatController.selected.code}" title="#{bundleReturns.CreateReturnFormatTitle_code}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_frequency}" for="frequency" />
+                        <p:inputText id="frequency" value="#{returnFormatController.selected.frequency}" title="#{bundleReturns.CreateReturnFormatTitle_frequency}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_category}" for="category" />
+                        <p:selectOneMenu id="category" value="#{returnFormatController.selected.category}" >
+                            <f:selectItems value="#{itemController.itemsAvailableSelectOne}"
+                                           var="categoryItem"
+                                           itemValue="#{categoryItem}"
+                                           itemLabel="#{categoryItem.name}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_senderStartDays}" for="senderStartDays" />
+                        <p:inputText id="senderStartDays" value="#{returnFormatController.selected.senderStartDays}" title="#{bundleReturns.CreateReturnFormatTitle_senderStartDays}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_senderSubmitDays}" for="senderSubmitDays" />
+                        <p:inputText id="senderSubmitDays" value="#{returnFormatController.selected.senderSubmitDays}" title="#{bundleReturns.CreateReturnFormatTitle_senderSubmitDays}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_sendingDeadline}" for="sendingDeadline" />
+                        <p:inputText id="sendingDeadline" value="#{returnFormatController.selected.sendingDeadline}" title="#{bundleReturns.CreateReturnFormatTitle_sendingDeadline}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_prepairedBy}" for="prepairedBy" />
+                        <p:inputText id="prepairedBy" value="#{returnFormatController.selected.prepairedBy}" title="#{bundleReturns.CreateReturnFormatTitle_prepairedBy}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_sentBy}" for="sentBy" />
+                        <p:inputText id="sentBy" value="#{returnFormatController.selected.sentBy}" title="#{bundleReturns.CreateReturnFormatTitle_sentBy}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receivedBy}" for="receivedBy" />
+                        <p:inputText id="receivedBy" value="#{returnFormatController.selected.receivedBy}" title="#{bundleReturns.CreateReturnFormatTitle_receivedBy}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receiveStartDays}" for="receiveStartDays" />
+                        <p:inputText id="receiveStartDays" value="#{returnFormatController.selected.receiveStartDays}" title="#{bundleReturns.CreateReturnFormatTitle_receiveStartDays}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receiveSubmitDays}" for="receiveSubmitDays" />
+                        <p:inputText id="receiveSubmitDays" value="#{returnFormatController.selected.receiveSubmitDays}" title="#{bundleReturns.CreateReturnFormatTitle_receiveSubmitDays}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receiveDeadline}" for="receiveDeadline" />
+                        <p:inputText id="receiveDeadline" value="#{returnFormatController.selected.receiveDeadline}" title="#{bundleReturns.CreateReturnFormatTitle_receiveDeadline}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_sendingAreaType}" for="sendingAreaType" />
+                        <p:inputText id="sendingAreaType" value="#{returnFormatController.selected.sendingAreaType}" title="#{bundleReturns.CreateReturnFormatTitle_sendingAreaType}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_receivingAreaType}" for="receivingAreaType" />
+                        <p:inputText id="receivingAreaType" value="#{returnFormatController.selected.receivingAreaType}" title="#{bundleReturns.CreateReturnFormatTitle_receivingAreaType}" />
+                        <p:outputLabel value="#{bundleReturns.CreateReturnFormatLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{returnFormatController.selected.id}" title="#{bundleReturns.CreateReturnFormatTitle_id}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{returnFormatController.create}" value="#{bundleReturns.Save}" update="display,:ReturnFormatListForm:datalist,:growl" oncomplete="handleSubmit(args,'ReturnFormatCreateDialog');"/>
+                    <p:commandButton value="#{bundleReturns.Cancel}" onclick="ReturnFormatCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

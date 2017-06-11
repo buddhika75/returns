@@ -11,9 +11,11 @@ import javax.inject.Named;
 import javax.enterprise.context.ApplicationScoped;
 import lk.gov.health.schoolhealth.AreaType;
 import lk.gov.health.schoolhealth.InstitutionType;
+import lk.gov.health.schoolhealth.ItemType;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.PrivilegeType;
 import lk.gov.health.schoolhealth.Quarter;
+import lk.gov.health.schoolhealth.ReturnTimeFrequency;
 
 /**
  *
@@ -49,5 +51,12 @@ public class EnumController {
         return InstitutionType.values();
     }
 
+    public ItemType[] getItemTypes() {
+        return ItemType.values();
+    }
     
+    public ReturnTimeFrequency[] getReturnTimeFrequencys(){
+        return ReturnTimeFrequency.values();
+    }
+
 }

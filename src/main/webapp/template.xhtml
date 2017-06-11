@@ -10,7 +10,7 @@
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
         <h:outputStylesheet library="css" name="default.css"/>
         <h:outputScript library="js" name="jsfcrud.js"/>
-        
+
     </h:head>
 
     <h:body>
@@ -30,7 +30,10 @@
                         <p:submenu label="#{bundle.Maintenance}">
                             <p:menuitem value="Manage Areas" action="/area/add_area_index" />
                             <p:menuitem value="Manage Users" action="/webUser/add_webuser_index" />
-                            <p:menuitem value="Manage Schools" outcome="/institution/index" />
+                            <p:menuitem value="Manage Schools" action="/institution/index" />
+                            <p:menuitem action="/item/List" value="Manage Items"/>
+                            <p:menuitem action="/returnFormat/List" value="Manage Return Formats"/>
+                            <p:menuitem action="/returnSubmission/List" value="Manage Return Submissions"/>
                         </p:submenu>
                     </p:menubar>
                 </h:form>

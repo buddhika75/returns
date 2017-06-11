@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ReturnFormatViewDlg" widgetVar="ReturnFormatViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleReturns.ViewReturnFormatTitle}">
+            <h:form id="ReturnFormatViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{returnFormatController.selected != null}">
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_name}"/>
+                        <h:outputText value="#{returnFormatController.selected.name}" title="#{bundleReturns.ViewReturnFormatTitle_name}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_code}"/>
+                        <h:outputText value="#{returnFormatController.selected.code}" title="#{bundleReturns.ViewReturnFormatTitle_code}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_frequency}"/>
+                        <h:outputText value="#{returnFormatController.selected.frequency}" title="#{bundleReturns.ViewReturnFormatTitle_frequency}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_category}"/>
+                        <h:outputText value="#{returnFormatController.selected.category}" title="#{bundleReturns.ViewReturnFormatTitle_category}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_senderStartDays}"/>
+                        <h:outputText value="#{returnFormatController.selected.senderStartDays}" title="#{bundleReturns.ViewReturnFormatTitle_senderStartDays}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_senderSubmitDays}"/>
+                        <h:outputText value="#{returnFormatController.selected.senderSubmitDays}" title="#{bundleReturns.ViewReturnFormatTitle_senderSubmitDays}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_sendingDeadline}"/>
+                        <h:outputText value="#{returnFormatController.selected.sendingDeadline}" title="#{bundleReturns.ViewReturnFormatTitle_sendingDeadline}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_prepairedBy}"/>
+                        <h:outputText value="#{returnFormatController.selected.prepairedBy}" title="#{bundleReturns.ViewReturnFormatTitle_prepairedBy}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_sentBy}"/>
+                        <h:outputText value="#{returnFormatController.selected.sentBy}" title="#{bundleReturns.ViewReturnFormatTitle_sentBy}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_receivedBy}"/>
+                        <h:outputText value="#{returnFormatController.selected.receivedBy}" title="#{bundleReturns.ViewReturnFormatTitle_receivedBy}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_receiveStartDays}"/>
+                        <h:outputText value="#{returnFormatController.selected.receiveStartDays}" title="#{bundleReturns.ViewReturnFormatTitle_receiveStartDays}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_receiveSubmitDays}"/>
+                        <h:outputText value="#{returnFormatController.selected.receiveSubmitDays}" title="#{bundleReturns.ViewReturnFormatTitle_receiveSubmitDays}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_receiveDeadline}"/>
+                        <h:outputText value="#{returnFormatController.selected.receiveDeadline}" title="#{bundleReturns.ViewReturnFormatTitle_receiveDeadline}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_sendingAreaType}"/>
+                        <h:outputText value="#{returnFormatController.selected.sendingAreaType}" title="#{bundleReturns.ViewReturnFormatTitle_sendingAreaType}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_receivingAreaType}"/>
+                        <h:outputText value="#{returnFormatController.selected.receivingAreaType}" title="#{bundleReturns.ViewReturnFormatTitle_receivingAreaType}"/>
+                        <h:outputText value="#{bundleReturns.ViewReturnFormatLabel_id}"/>
+                        <h:outputText value="#{returnFormatController.selected.id}" title="#{bundleReturns.ViewReturnFormatTitle_id}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleReturns.Close}" onclick="ReturnFormatViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

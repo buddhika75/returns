@@ -28,5 +28,13 @@
             <base-name>/Bundle2</base-name>
             <var>bundle2</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>/BundleReturns</base-name>
+            <var>bundleReturns</var>
+        </resource-bundle>
+        <resource-bundle>
+            <base-name>/BundleItems</base-name>
+            <var>bundleItems</var>
+        </resource-bundle>
     </application>
 </faces-config>

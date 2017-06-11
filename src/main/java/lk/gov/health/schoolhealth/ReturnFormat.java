@@ -44,6 +44,8 @@ public class ReturnFormat implements Serializable {
     Integer receiveDeadline;
     AreaType receivingAreaType;
     
+    
+    
     public String getName() {
         return name;
     }
