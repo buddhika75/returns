@@ -15,5 +15,5 @@ public enum AreaType {
     MOH,
     District,
     Province,
-    EducationalZone,
+    National,
 }

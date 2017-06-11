@@ -117,12 +117,7 @@
                             </f:facet>
                             <h:outputText value="#{item.receivingAreaType}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnFormatTitle_id}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.id}"/>
-                        </p:column>
+                       
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundleReturns.Create}" actionListener="#{returnFormatController.prepareCreate}" update=":ReturnFormatCreateForm" oncomplete="PF('ReturnFormatCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundleReturns.View}" update=":ReturnFormatViewForm" oncomplete="PF('ReturnFormatViewDialog').show()" disabled="#{empty returnFormatController.selected}"/>
