@@ -142,6 +142,7 @@ public class ReturnSubmissionController implements Serializable {
                 m.put("rm", month);
             }
             j += " order by r.receiveDate desc";
+            m.put("sa", a);
             m.put("rf", returnFormat);
             m.put("ra", webUserController.getLoggedRdhsArea());
             ReturnSubmission rs = getFacade().findFirstBySQL(j, m);
