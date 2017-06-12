@@ -82,13 +82,13 @@ public class ReturnSubmission implements Serializable {
     public String getForeGroundColor() {
         switch (returnReceiveCategory) {
             case Not_Received:
-                foreGroundColor = "#D8000C";
+                foreGroundColor = "#D8000C"; break;
             case Received_late:
-                foreGroundColor = "#9F6000";
+                foreGroundColor = "#9F6000"; break;
             case Received_on_time:
-                foreGroundColor = "#4F8A10";
+                foreGroundColor = "#4F8A10"; break;
             case Sent_yet_to_receive:
-                foreGroundColor = "#00529B";
+                foreGroundColor = "#00529B"; break;
         }
         return foreGroundColor;
     }
@@ -96,13 +96,13 @@ public class ReturnSubmission implements Serializable {
     public String getBackGroundColor() {
         switch (returnReceiveCategory) {
             case Not_Received:
-                backGroundColor = "#FFBABA";
+                backGroundColor = "#FFBABA"; break;
             case Received_late:
-                backGroundColor = "#FEEFB3";
+                backGroundColor = "#FEEFB3"; break;
             case Received_on_time:
-                backGroundColor = "#DFF2BF";
+                backGroundColor = "#DFF2BF"; break;
             case Sent_yet_to_receive:
-                backGroundColor = "#BDE5F8";
+                backGroundColor = "#BDE5F8"; break;
         }
         return backGroundColor;
     }

@@ -104,11 +104,11 @@
                                         </th>
                                     </tr>
                                     <ui:repeat value="#{returnSubmissionController.genItems}" var="gi" >
-                                        <tr style="color: #{gi.foreGroundColor}; background-color: #{gi.backGroundColor}">
-                                            <th>
+                                        <tr style="color: #{gi.foreGroundColor}; background-color: #{gi.backGroundColor};padding: 5px; margin: 5px;">
+                                            <th style="color: #{gi.foreGroundColor}; background-color: #{gi.backGroundColor};padding: 5px; margin: 5px; text-align: left;">
                                                 <p:outputLabel value="#{gi.sentArea.name}" ></p:outputLabel>
                                             </th>
-                                            <th>
+                                            <th style="color: #{gi.foreGroundColor}; background-color: #{gi.backGroundColor};padding: 5px; margin: 5px; text-align: left;">
                                                 <p:outputLabel value="#{gi.returnReceiveCategory}" ></p:outputLabel>
                                             </th>
                                         </tr>
