@@ -12,5 +12,6 @@ package lk.gov.health.schoolhealth;
 public enum ReturnReceiveCategory {
     Received_on_time,
     Received_late,
+    Sent_yet_to_receive,
     Not_Received;
 }

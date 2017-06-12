@@ -999,6 +999,13 @@ public class WebUserController implements Serializable {
         c.set(Calendar.MONTH, Calendar.DECEMBER);
         return getLastDayOfMonth(c.getTime());
     }
+    
+    public Date getLastDayOfYear(int year) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, Calendar.DECEMBER);
+        return getLastDayOfMonth(c.getTime());
+    }
 
     public Date getFirstDayOfMonth() {
         return getFirstDayOfMonth(new Date());

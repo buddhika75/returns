@@ -63,9 +63,49 @@ public class ReturnSubmission implements Serializable {
 
     @Lob
     String receiveComments;
-    
+
     @Enumerated(EnumType.STRING)
     ReturnReceiveCategory returnReceiveCategory;
+
+    @Transient
+    String foreGroundColor;
+
+    @Transient
+    String backGroundColor;
+
+    /**
+     * 
+     *  "https://isabelcastillo.com/error-info-messages-css"
+     * 
+     */
+    
+    public String getForeGroundColor() {
+        switch (returnReceiveCategory) {
+            case Not_Received:
+                foreGroundColor = "#D8000C";
+            case Received_late:
+                foreGroundColor = "#9F6000";
+            case Received_on_time:
+                foreGroundColor = "#4F8A10";
+            case Sent_yet_to_receive:
+                foreGroundColor = "#00529B";
+        }
+        return foreGroundColor;
+    }
+
+    public String getBackGroundColor() {
+        switch (returnReceiveCategory) {
+            case Not_Received:
+                backGroundColor = "#FFBABA";
+            case Received_late:
+                backGroundColor = "#FEEFB3";
+            case Received_on_time:
+                backGroundColor = "#DFF2BF";
+            case Sent_yet_to_receive:
+                backGroundColor = "#BDE5F8";
+        }
+        return backGroundColor;
+    }
 
     public ReturnReceiveCategory getReturnReceiveCategory() {
         return returnReceiveCategory;
@@ -74,9 +114,6 @@ public class ReturnSubmission implements Serializable {
     public void setReturnReceiveCategory(ReturnReceiveCategory returnReceiveCategory) {
         this.returnReceiveCategory = returnReceiveCategory;
     }
-    
-    
-    
 
     public Long getId() {
         return id;
@@ -205,9 +242,6 @@ public class ReturnSubmission implements Serializable {
     public void setReceiveComments(String receiveComments) {
         this.receiveComments = receiveComments;
     }
-    
-    
-    
 
     @Override
     public int hashCode() {

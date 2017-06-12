@@ -7,6 +7,7 @@ import lk.gov.health.faces.ReturnSubmissionFacade;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,10 @@ import lk.gov.health.schoolhealth.AreaType;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.Quarter;
 import lk.gov.health.schoolhealth.ReturnFormat;
+import lk.gov.health.schoolhealth.ReturnReceiveCategory;
+import org.primefaces.event.timeline.TimelineSelectEvent;
+import org.primefaces.model.timeline.TimelineEvent;
+import org.primefaces.model.timeline.TimelineModel;
 
 @Named("returnSubmissionController")
 @SessionScoped
@@ -38,15 +43,18 @@ public class ReturnSubmissionController implements Serializable {
     @EJB
     private lk.gov.health.faces.ReturnSubmissionFacade ejbFacade;
     private List<ReturnSubmission> items = null;
+    private List<ReturnSubmission> genItems = null;
     private ReturnSubmission selected;
 
     ReturnFormat returnFormat;
     int year;
     Month month;
     Quarter quarter;
-    Date date;
-    
+    Date deadlineDate;
+
     List<Area> mySendingAreas;
+
+    private TimelineModel model;
 
     public String toReceiveReturns() {
         items = new ArrayList<ReturnSubmission>();
@@ -108,25 +116,66 @@ public class ReturnSubmissionController implements Serializable {
         return "";
     }
 
-    private void fillMySendingAreas(){
-        mySendingAreas = webUserController.myMohAreas;
+    private void fillMySendingAreas() {
+        mySendingAreas = webUserController.getMyMohAreas();
     }
-    
-    private void markAreasForReceiving(){
-        
+
+    private void markAreasForReceiving() {
+        genItems = new ArrayList<ReturnSubmission>();
+        for (Area a : mySendingAreas) {
+            String j;
+            Map m = new HashMap();
+            j = "select r from ReturnSubmission r "
+                    + " where r.returnFormat=:rf "
+                    + " and r.receiveArea=:ra "
+                    + " and r.sentArea=:sa ";
+            if (returnFormat.isNeedYear()) {
+                j += " and r.returnYear=:ry ";
+                m.put("ry", year);
+            }
+            if (returnFormat.isNeedQuarter()) {
+                j += " and r.quarter=:rq ";
+                m.put("rq", quarter);
+            }
+            if (returnFormat.isNeedMonth()) {
+                j += " and r.returnMonth=:rm ";
+                m.put("rm", month);
+            }
+            j += " order by r.receiveDate desc";
+            m.put("rf", returnFormat);
+            m.put("ra", webUserController.getLoggedRdhsArea());
+            ReturnSubmission rs = getFacade().findFirstBySQL(j, m);
+            if(rs==null){
+                rs=new ReturnSubmission();
+                rs.setSentArea(a);
+                rs.setReturnReceiveCategory(ReturnReceiveCategory.Not_Received);
+            }else{
+                if(rs.getReceiveDate()==null){
+                    rs.setReturnReceiveCategory(ReturnReceiveCategory.Sent_yet_to_receive);
+                }else{
+                    if(rs.getReceiveDate().after(deadlineDate)){
+                        rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_late);
+                    }else{
+                        rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_on_time);
+                    }
+                }
+            }
+            genItems.add(rs);
+        }
     }
-    
-    private void markTimelineForReceiving(){
-        
+
+    private void markTimelineForReceiving() {
+        model = new TimelineModel();
+        model.add(new TimelineEvent("SUBMISSION DEADLINE", deadlineDate));
+        for (ReturnSubmission s : items) {
+            model.add(new TimelineEvent(s.getSentArea().getName(), s.getReceiveDate()));
+        }
     }
-    
-    private void markMapForReceiving(){
-        
+
+    private void markMapForReceiving() {
+
     }
-    
-    
-    
-    
+
     public String markAsReceived() {
         if (selected == null) {
             JsfUtil.addErrorMessage("Please select a return");
@@ -205,6 +254,46 @@ public class ReturnSubmissionController implements Serializable {
         return "/returnSubmission/submit_new_report_selected";
     }
 
+    public void calculateDeadline() {
+        Date lastDayOfPeriod = new Date();
+        switch (returnFormat.getFrequency()) {
+            case Annual:
+                year = webUserController.getLastYear();
+                lastDayOfPeriod = webUserController.getLastDayOfYear(year);
+                break;
+            case Quarterly:
+                quarter = webUserController.getLastQuarterFromDate(new Date());
+                if (quarter == Quarter.Forth) {
+                    year = webUserController.getLastYear();
+                } else {
+                    year = webUserController.getThisYear();
+                }
+                lastDayOfPeriod = webUserController.getLastDayOfQuarter(year, quarter);
+                break;
+            case Monthly:
+                month = webUserController.getLastMonth(new Date());
+                if (month == Month.December) {
+                    year = webUserController.getLastYear();
+                } else {
+                    year = webUserController.getThisYear();
+                }
+                lastDayOfPeriod = webUserController.getLastDayOfMonth(year, month);
+                break;
+            case Weekely:
+                JsfUtil.addErrorMessage("Still Under Development");
+                return;
+            default:
+                JsfUtil.addErrorMessage("Still Under Development");
+                return;
+
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(lastDayOfPeriod);
+        c.add(Calendar.MONTH, returnFormat.getReceivingDeadlineMonths());
+        c.add(Calendar.DATE, returnFormat.getReceivingDeadlineDays());
+        deadlineDate = c.getTime();
+    }
+
     public String toCheckReturnAfterSelection() {
         if (returnFormat == null) {
             JsfUtil.addErrorMessage("Select a Return");
@@ -244,6 +333,7 @@ public class ReturnSubmissionController implements Serializable {
 
             }
         }
+        calculateDeadline();
         return "/returnSubmission/check_returns_selected";
     }
 
@@ -385,15 +475,39 @@ public class ReturnSubmissionController implements Serializable {
         this.quarter = quarter;
     }
 
-    public Date getDate() {
-        if (date == null) {
-            date = new Date();
+    public Date getDeadlineDate() {
+        if (deadlineDate == null) {
+            deadlineDate = new Date();
         }
-        return date;
+        return deadlineDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDeadlineDate(Date deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
+    public List<ReturnSubmission> getGenItems() {
+        return genItems;
+    }
+
+    public void setGenItems(List<ReturnSubmission> genItems) {
+        this.genItems = genItems;
+    }
+
+    public List<Area> getMySendingAreas() {
+        return mySendingAreas;
+    }
+
+    public void setMySendingAreas(List<Area> mySendingAreas) {
+        this.mySendingAreas = mySendingAreas;
+    }
+
+    public WebUserController getWebUserController() {
+        return webUserController;
+    }
+
+    public TimelineModel getModel() {
+        return model;
     }
 
     @FacesConverter(forClass = ReturnSubmission.class)

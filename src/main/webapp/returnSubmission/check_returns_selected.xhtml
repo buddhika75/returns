@@ -38,8 +38,8 @@
                                 <f:selectItems value="#{enumController.quarters}" ></f:selectItems>
                             </p:selectOneMenu>
 
-
-
+                            <p:outputLabel value="Deadline" ></p:outputLabel>
+                            <p:calendar value="#{returnSubmissionController.deadlineDate}" ></p:calendar>
 
                         </p:panelGrid>
                         <p:commandButton ajax="false" value="List" action="#{returnSubmissionController.listReceivedReturns()}" ></p:commandButton>
@@ -94,9 +94,34 @@
                                 </p:dataTable>
                             </p:tab>
                             <p:tab title="Responders &amp; Non-Responders List" >
+                                <table >
+                                    <tr>
+                                        <th>
+                                            <p:outputLabel value="MOH" ></p:outputLabel>
+                                        </th>
+                                        <th>
+                                            <p:outputLabel value="Status" ></p:outputLabel>
+                                        </th>
+                                    </tr>
+                                    <ui:repeat value="#{returnSubmissionController.genItems}" var="gi" >
+                                        <tr style="color: #{gi.foreGroundColor}; background-color: #{gi.backGroundColor}">
+                                            <th>
+                                                <p:outputLabel value="#{gi.sentArea.name}" ></p:outputLabel>
+                                            </th>
+                                            <th>
+                                                <p:outputLabel value="#{gi.returnReceiveCategory}" ></p:outputLabel>
+                                            </th>
+                                        </tr>
+
+                                    </ui:repeat>
+                                </table>
 
                             </p:tab>
                             <p:tab title="Timeline" >
+
+                                <p:timeline id="timeline" value="#{returnSubmissionController.model}" 
+                                            height="250px" > 
+                                </p:timeline>
 
                             </p:tab>
                             <p:tab title="Map" >
