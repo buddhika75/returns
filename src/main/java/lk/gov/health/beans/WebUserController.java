@@ -782,7 +782,7 @@ public class WebUserController implements Serializable {
             System.out.println("development Stage ");
             return true;
         }
-        System.out.println("logged = " + logged);
+//        System.out.println("logged = " + logged);
         return logged;
     }
 
