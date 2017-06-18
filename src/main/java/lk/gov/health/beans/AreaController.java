@@ -176,21 +176,21 @@ public class AreaController implements Serializable {
                         System.out.println(country[3] + "Coordinates [Longitude= " + country[1] + " , Latitude=" + country[2] + "]");
 
                         String areName = country[3].replace("\"", "");
-                        String j = "select c from Area c where c.name like :a order by c.id desc";
+                        String j = "select c from Area c where upper(c.name) like :a order by c.id desc";
                         Map m = new HashMap();
-                        m.put("a", areName + "%");
+                        m.put("a", areName.toUpperCase() + "%");
                         Area a = getFacade().findFirstBySQL(j, m);
 
                         if (a == null) {
-                            a = new Area();
-                            a.setName(areName);
-                            a.setType(AreaType.MOH);
-                            getFacade().create(a);
+//                            a = new Area();
+//                            a.setName(areName);
+//                            a.setType(AreaType.MOH);
+//                            getFacade().create(a);
+                            break;
                         }
 
                         String strLon = country[1].replace("\"", "");
                         String strLat = country[2].replace("\"", "");
-                        
 
                         double lon = Double.parseDouble(strLon);
                         System.out.println("lon = " + lon);
