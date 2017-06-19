@@ -126,6 +126,10 @@ public class WebUserController implements Serializable {
         }
         selected.setPassword(password);
         getFacade().edit(selected);
+        password="";
+        confirmPassword="";
+        currentPassword="";
+        selected = null;
         JsfUtil.addSuccessMessage("Updated");
         return "/index";
     }
