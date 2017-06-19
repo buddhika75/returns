@@ -84,7 +84,7 @@ public class ReturnSubmissionController implements Serializable {
         List<ReturnFormat> rfs = returnFormatFacade.findBySQL(j, m);
         for (ReturnFormat rf : rfs) {
             ReturnFormatLastSubmission rfls = new ReturnFormatLastSubmission();
-            rfls.setReturnFormat(returnFormat);
+            rfls.setReturnFormat(rf);
             m = new HashMap();
             j = "select r from ReturnSubmission r "
                     + " where r.sentArea=:sa "
