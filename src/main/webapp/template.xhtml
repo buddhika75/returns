@@ -15,7 +15,7 @@
 
     <h:body>
 
-        <p:growl id="growl" life="3000" />
+        <p:growl id="growl" life="3000" autoUpdate="true" />
 
         <p:layout fullPage="true">
             <p:layoutUnit position="north" size="80" header="School Health Information System">
@@ -26,7 +26,13 @@
                             <p:menuitem ajax="false" value="Submit New Return" action="#{returnSubmissionController.toSubmitNewReport()}" />
                             <p:menuitem ajax="false" value="Receive Returns" action="#{returnSubmissionController.toReceiveReturns()}" />
                             <p:menuitem ajax="false" value="Check Returns" action="#{returnSubmissionController.toCheckReturns()}" />
+                            <p:menuitem ajax="false" value="Edit my details" action="#{webUserController.toEditMyDetails()}" />
+                            <p:menuitem ajax="false" value="Change my password" action="#{webUserController.toEditMyPassword()}" />
                         </p:submenu>
+                        <p:submenu label="Administration">
+                            <p:menuitem ajax="false" value="Submit New Return" action="#{returnSubmissionController.toSubmitNewReportFull()}" />
+                        </p:submenu>
+
                         <p:submenu label="#{bundle.Maintenance}">
                             <p:menuitem  ajax="false" value="Manage Areas" action="/area/add_area_index" />
                             <p:menuitem  ajax="false" value="Manage Users" action="/webUser/add_webuser_index" />
@@ -72,8 +78,8 @@
                             <p:spacer height="1" width="5" ></p:spacer>
                             <p:commandLink ajax="false" value="Logout" action="#{webUserController.logout()}" ></p:commandLink>
 
-                         
-                            
+
+
                         </h:panelGrid>
                     </h:form>
                 </ui:insert>

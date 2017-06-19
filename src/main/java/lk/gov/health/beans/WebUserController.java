@@ -69,6 +69,7 @@ public class WebUserController implements Serializable {
 
     private String userName;
     private String password;
+    private String currentPassword;
     private String confirmPassword;
     private Area phiArea;
     private Area mohArea;
@@ -76,10 +77,61 @@ public class WebUserController implements Serializable {
     private Institution mohOffice;
     private Institution rdhsOffice;
 
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+    
+    
+    
+    public String toEditMyDetails(){
+        if(loggedUser==null){
+            return "";
+        }
+        selected = loggedUser;
+        return "/webUser/edit_my_details";
+    }
+
+    public String toEditMyPassword(){
+        if(loggedUser==null){
+            return "";
+        }
+        selected = loggedUser;
+        return "/webUser/edit_my_password";
+    }
+    
     public String toAddNewUser() {
         selected = new WebUser();
         selected.setActive(true);
         return "/webUser/add_new_user";
+    }
+    
+    public String updateMyPassword(){
+        if(selected==null){
+            return "";
+        }
+        if(selected.getId()==null){
+            return "";
+        }
+        if(!selected.getPassword().equals(currentPassword)){
+            JsfUtil.addErrorMessage("Current Password is Wrong");
+            return "";
+        }
+        if(!password.equals(confirmPassword)){
+            JsfUtil.addErrorMessage("Password and confirm password is NOT maching");
+            return "";
+        }
+        selected.setPassword(password);
+        getFacade().edit(selected);
+        password="";
+        confirmPassword="";
+        currentPassword="";
+        selected = null;
+        JsfUtil.addSuccessMessage("Updated");
+        return "/index";
     }
 
     public String saveNewUser() {
@@ -782,7 +834,7 @@ public class WebUserController implements Serializable {
             System.out.println("development Stage ");
             return true;
         }
-        System.out.println("logged = " + logged);
+//        System.out.println("logged = " + logged);
         return logged;
     }
 

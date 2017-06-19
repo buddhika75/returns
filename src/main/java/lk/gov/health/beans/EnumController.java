@@ -15,6 +15,7 @@ import lk.gov.health.schoolhealth.ItemType;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.PrivilegeType;
 import lk.gov.health.schoolhealth.Quarter;
+import lk.gov.health.schoolhealth.ReturnReceiveCategory;
 import lk.gov.health.schoolhealth.ReturnTimeFrequency;
 
 /**
@@ -41,6 +42,10 @@ public class EnumController {
 
     public AreaType[] getAreaTypes() {
         return AreaType.values();
+    }
+    
+    public ReturnReceiveCategory[] getReturnReceiveCategories(){
+        return ReturnReceiveCategory.values();
     }
 
     public PrivilegeType[] getPrivilegeTypes() {

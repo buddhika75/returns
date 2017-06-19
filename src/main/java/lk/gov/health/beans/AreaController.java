@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import lk.gov.health.schoolhealth.Area;
 import lk.gov.health.beans.util.JsfUtil;
 import lk.gov.health.beans.util.JsfUtil.PersistAction;
@@ -31,6 +32,7 @@ import javax.inject.Named;
 import lk.gov.health.faces.CoordinateFacade;
 import lk.gov.health.schoolhealth.AreaType;
 import lk.gov.health.schoolhealth.Coordinate;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.event.map.OverlaySelectEvent;
 import org.primefaces.model.map.DefaultMapModel;
@@ -111,10 +113,10 @@ public class AreaController implements Serializable {
         }
 
         try {
-            File f = new File(getSelected().toString());
             String line = "";
             String cvsSplitBy = ",";
-            BufferedReader br = new BufferedReader(new FileReader(f));
+            BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputstream(), "UTF-8"));
+
             int i = 0;
             while ((line = br.readLine()) != null) {
                 String[] country = line.split(cvsSplitBy);
@@ -143,6 +145,70 @@ public class AreaController implements Serializable {
             }
             return "";
         } catch (IOException e) {
+            System.out.println("e = " + e);
+            return "";
+        }
+
+    }
+
+    public String saveCentreCoordinates() {
+        System.out.println("saveCentreCoordinates = ");
+        if (file == null || "".equals(file.getFileName())) {
+            return "";
+        }
+        if (file == null) {
+            JsfUtil.addErrorMessage("Please select an CSV File");
+            return "";
+        }
+
+        try {
+            String line = "";
+            String cvsSplitBy = ",";
+            BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputstream(), "UTF-8"));
+
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                String[] country = line.split(cvsSplitBy);
+                System.out.println("i = " + i);
+                if (i > 0) {
+                    System.out.println("country.length = " + country.length);
+                    if (country.length > 3) {
+                        System.out.println(country[3] + "Coordinates [Longitude= " + country[1] + " , Latitude=" + country[2] + "]");
+
+                        String areName = country[3].replace("\"", "");
+                        String j = "select c from Area c where upper(c.name) like :a order by c.id desc";
+                        Map m = new HashMap();
+                        m.put("a", areName.toUpperCase() + "%");
+                        Area a = getFacade().findFirstBySQL(j, m);
+
+                        if (a == null) {
+//                            a = new Area();
+//                            a.setName(areName);
+//                            a.setType(AreaType.MOH);
+//                            getFacade().create(a);
+                            break;
+                        }
+
+                        String strLon = country[1].replace("\"", "");
+                        String strLat = country[2].replace("\"", "");
+
+                        double lon = Double.parseDouble(strLon);
+                        System.out.println("lon = " + lon);
+
+                        double lat = Double.parseDouble(strLat);
+
+                        a.setCentreLatitude(lat);
+                        a.setCentreLongitude(lon);
+                        a.setZoomLavel(12);
+
+                        getFacade().edit(a);
+                    }
+                }
+                i++;
+            }
+            return "";
+        } catch (IOException e) {
+            System.out.println("e = " + e);
             return "";
         }
 
