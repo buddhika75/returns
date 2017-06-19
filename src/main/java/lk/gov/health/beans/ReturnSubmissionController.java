@@ -24,11 +24,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
+import lk.gov.health.faces.ReturnFormatFacade;
 import lk.gov.health.schoolhealth.Area;
 import lk.gov.health.schoolhealth.AreaType;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.Quarter;
 import lk.gov.health.schoolhealth.ReturnFormat;
+import lk.gov.health.schoolhealth.ReturnFormatLastSubmission;
 import lk.gov.health.schoolhealth.ReturnReceiveCategory;
 import org.primefaces.event.timeline.TimelineSelectEvent;
 import org.primefaces.model.timeline.TimelineEvent;
@@ -42,6 +44,8 @@ public class ReturnSubmissionController implements Serializable {
     WebUserController webUserController;
     @EJB
     private lk.gov.health.faces.ReturnSubmissionFacade ejbFacade;
+    @EJB
+    ReturnFormatFacade returnFormatFacade;
     private List<ReturnSubmission> items = null;
     private List<ReturnSubmission> genItems = null;
     private ReturnSubmission selected;
@@ -53,24 +57,50 @@ public class ReturnSubmissionController implements Serializable {
     Date deadlineDate;
     private Date fromDate;
     private Date toDate;
-    
-    
+    List<ReturnFormatLastSubmission> returnFormatLastSubmissions;
 
     List<Area> mySendingAreas;
 
     private TimelineModel model;
 
+    public String listReturnFormatLastSubmissions() {
+        returnFormatLastSubmissions = new ArrayList<ReturnFormatLastSubmission>();
+        String j;
+        Map m = new HashMap();
+        j = "select f from ReturnFormat f "
+                + " where f.sentBy = :p "
+                + " order by f.name";
+        m.put("p", webUserController.getLoggedPrivilegeType());
+        ReturnFormat f = new ReturnFormat();
+        List<ReturnFormat> rfs = returnFormatFacade.findBySQL(j, m);
+        for (ReturnFormat rf : rfs) {
+            ReturnFormatLastSubmission rfls = new ReturnFormatLastSubmission();
+            rfls.setReturnFormat(returnFormat);
+            m = new HashMap();
+            j = "select r from ReturnSubmission r "
+                    + " where r.sentArea=:sa "
+                    + " and r.returnFormat=:rf "
+                    + " order by r.id desc";
+            m.put("rf", rf);
+            m.put("sa", webUserController.getLoggedMohArea());
+            ReturnSubmission rs = getFacade().findFirstBySQL(j, m);
+            rfls.setReturnSubmission(rs);
+            returnFormatLastSubmissions.add(rfls);
+        }
+        return "/returnSubmission/format_data";
+    }
+
     public String toReceiveReturns() {
         items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/receive_returns";
     }
-    
+
     public String toCheckSubmissionStatus() {
         items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/check_submission_status";
     }
 
-     public String listMySubmissions() {
+    public String listMySubmissions() {
         String j;
         Map m = new HashMap();
         j = "select r from ReturnSubmission r "
@@ -82,7 +112,7 @@ public class ReturnSubmissionController implements Serializable {
         items = getFacade().findBySQL(j, m);
         return "";
     }
-    
+
     public String listPendingRetunrsToReceive() {
         if (returnFormat == null) {
             JsfUtil.addErrorMessage("Select a return format");
@@ -172,16 +202,12 @@ public class ReturnSubmissionController implements Serializable {
                 rs = new ReturnSubmission();
                 rs.setSentArea(a);
                 rs.setReturnReceiveCategory(ReturnReceiveCategory.Not_Received);
+            } else if (rs.getReceiveDate() == null) {
+                rs.setReturnReceiveCategory(ReturnReceiveCategory.Sent_yet_to_receive);
+            } else if (rs.getReceiveDate().after(deadlineDate)) {
+                rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_late);
             } else {
-                if (rs.getReceiveDate() == null) {
-                    rs.setReturnReceiveCategory(ReturnReceiveCategory.Sent_yet_to_receive);
-                } else {
-                    if (rs.getReceiveDate().after(deadlineDate)) {
-                        rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_late);
-                    } else {
-                        rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_on_time);
-                    }
-                }
+                rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_on_time);
             }
             genItems.add(rs);
         }
@@ -191,7 +217,9 @@ public class ReturnSubmissionController implements Serializable {
         model = new TimelineModel();
         model.add(new TimelineEvent("SUBMISSION DEADLINE", deadlineDate));
         for (ReturnSubmission s : items) {
-            model.add(new TimelineEvent(s.getSentArea().getName(), s.getReceiveDate()));
+            if (s != null && s.getSentArea() != null && s.getSentArea().getName() != null && s.getReceiveDate() != null) {
+                model.add(new TimelineEvent(s.getSentArea().getName(), s.getReceiveDate()));
+            }
         }
     }
 
@@ -362,8 +390,12 @@ public class ReturnSubmissionController implements Serializable {
         }
         Calendar c = Calendar.getInstance();
         c.setTime(lastDayOfPeriod);
-        c.add(Calendar.MONTH, returnFormat.getReceivingDeadlineMonths());
-        c.add(Calendar.DATE, returnFormat.getReceivingDeadlineDays());
+        if (returnFormat.getReceivingDeadlineMonths() != null) {
+            c.add(Calendar.MONTH, returnFormat.getReceivingDeadlineMonths());
+        }
+        if (returnFormat.getReceivingDeadlineDays() != null) {
+            c.add(Calendar.DATE, returnFormat.getReceivingDeadlineDays());
+        }
         deadlineDate = c.getTime();
     }
 
@@ -430,6 +462,15 @@ public class ReturnSubmissionController implements Serializable {
         } else {
             getFacade().edit(selected);
             JsfUtil.addSuccessMessage("Updated");
+        }
+        return "/index";
+    }
+
+    public String makeReceiveDateFromSentDate() {
+        List<ReturnSubmission> ss = getFacade().findAll();
+        for (ReturnSubmission s : ss) {
+            s.setReceiveDate(s.getSentDate());
+            getFacade().edit(s);
         }
         return "/index";
     }
@@ -595,7 +636,7 @@ public class ReturnSubmissionController implements Serializable {
     }
 
     public Date getFromDate() {
-        if(fromDate==null){
+        if (fromDate == null) {
             fromDate = webUserController.getFirstDayOfQuarter();
         }
         return fromDate;
@@ -606,8 +647,8 @@ public class ReturnSubmissionController implements Serializable {
     }
 
     public Date getToDate() {
-        if(toDate==null){
-            toDate=webUserController.getLastDayOfQuarter();
+        if (toDate == null) {
+            toDate = webUserController.getLastDayOfQuarter();
         }
         return toDate;
     }
@@ -616,8 +657,14 @@ public class ReturnSubmissionController implements Serializable {
         this.toDate = toDate;
     }
 
-    
-    
+    public List<ReturnFormatLastSubmission> getReturnFormatLastSubmissions() {
+        return returnFormatLastSubmissions;
+    }
+
+    public void setReturnFormatLastSubmissions(List<ReturnFormatLastSubmission> returnFormatLastSubmissions) {
+        this.returnFormatLastSubmissions = returnFormatLastSubmissions;
+    }
+
     @FacesConverter(forClass = ReturnSubmission.class)
     public static class ReturnSubmissionControllerConverter implements Converter {
 

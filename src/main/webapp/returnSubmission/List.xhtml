@@ -27,52 +27,22 @@
                         <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_id}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.id}"/>
-                        </p:column>
-                        <p:column>
+                        <p:column sortBy="#{item.returnFormat.name}">
                             <f:facet name="header">
                                 <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_returnFormat}"/>
                             </f:facet>
-                            <h:outputText value="#{item.returnFormat}"/>
+                            <h:outputText value="#{item.returnFormat.name}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_quarter}"/>
+                                <h:outputText value="Year/Quarter/Month"/>
                             </f:facet>
-                            <h:outputText value="#{item.quarter}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_returnMonth}"/>
-                            </f:facet>
+                            <h:outputText value="#{item.returnYear} - "/>
+                            <h:outputText value="#{item.quarter} - "/>
                             <h:outputText value="#{item.returnMonth}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_returnYear}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.returnYear}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_fromDate}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.fromDate}">
-                                <f:convertDateTime pattern="dd MMMM yyyy" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_toDate}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.toDate}">
-                                <f:convertDateTime pattern="dd MMMM yyyy" />
-                            </h:outputText>
-                        </p:column>
+
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_sentDate}"/>
@@ -85,25 +55,7 @@
                             <f:facet name="header">
                                 <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_sentArea}"/>
                             </f:facet>
-                            <h:outputText value="#{item.sentArea}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_prepairedBy}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.prepairedBy}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_sentBy}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.sentBy}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundleReturns.ListReturnSubmissionTitle_receivedBy}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.receivedBy}"/>
+                            <h:outputText value="#{item.sentArea.name}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
