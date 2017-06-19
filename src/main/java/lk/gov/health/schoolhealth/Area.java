@@ -40,7 +40,73 @@ public class Area implements Serializable {
     double centreLongitude;
     double centreLatitude;
     double zoomLavel;
+    String officialPhone;
+    String officeFax;
+    String mobilePhone;
+    String personalAddress;
+    String officialAddress;
+    String officialEmail;
+    String personalEmail;
 
+    public String getOfficialPhone() {
+        return officialPhone;
+    }
+
+    public void setOfficialPhone(String officialPhone) {
+        this.officialPhone = officialPhone;
+    }
+
+    public String getOfficeFax() {
+        return officeFax;
+    }
+
+    public void setOfficeFax(String officeFax) {
+        this.officeFax = officeFax;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getPersonalAddress() {
+        return personalAddress;
+    }
+
+    public void setPersonalAddress(String personalAddress) {
+        this.personalAddress = personalAddress;
+    }
+
+    public String getOfficialAddress() {
+        return officialAddress;
+    }
+
+    public void setOfficialAddress(String officialAddress) {
+        this.officialAddress = officialAddress;
+    }
+
+    public String getOfficialEmail() {
+        return officialEmail;
+    }
+
+    public void setOfficialEmail(String officialEmail) {
+        this.officialEmail = officialEmail;
+    }
+
+    public String getPersonalEmail() {
+        return personalEmail;
+    }
+
+    public void setPersonalEmail(String personalEmail) {
+        this.personalEmail = personalEmail;
+    }
+    
+
+    
+    
     public double getCentreLongitude() {
         return centreLongitude;
     }

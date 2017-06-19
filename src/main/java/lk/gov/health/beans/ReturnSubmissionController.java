@@ -146,17 +146,17 @@ public class ReturnSubmissionController implements Serializable {
             m.put("rf", returnFormat);
             m.put("ra", webUserController.getLoggedRdhsArea());
             ReturnSubmission rs = getFacade().findFirstBySQL(j, m);
-            if(rs==null){
-                rs=new ReturnSubmission();
+            if (rs == null) {
+                rs = new ReturnSubmission();
                 rs.setSentArea(a);
                 rs.setReturnReceiveCategory(ReturnReceiveCategory.Not_Received);
-            }else{
-                if(rs.getReceiveDate()==null){
+            } else {
+                if (rs.getReceiveDate() == null) {
                     rs.setReturnReceiveCategory(ReturnReceiveCategory.Sent_yet_to_receive);
-                }else{
-                    if(rs.getReceiveDate().after(deadlineDate)){
+                } else {
+                    if (rs.getReceiveDate().after(deadlineDate)) {
                         rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_late);
-                    }else{
+                    } else {
                         rs.setReturnReceiveCategory(ReturnReceiveCategory.Received_on_time);
                     }
                 }
@@ -196,9 +196,59 @@ public class ReturnSubmissionController implements Serializable {
         return "/returnSubmission/submit_new_report";
     }
 
+    public String toSubmitNewReportFull() {
+        selected = new ReturnSubmission();
+        return "/returnSubmission/submit_new_report_full";
+    }
+
     public String toCheckReturns() {
         items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/check_returns";
+    }
+
+    public String toSubmitNewReportAfterSelectionAsAdmin() {
+        if (returnFormat == null) {
+            JsfUtil.addErrorMessage("Select a Return");
+            return "";
+        }
+        selected.setReturnFormat(returnFormat);
+        selected.setSentDate(new Date());
+
+        if (null == selected.getReturnFormat().getFrequency()) {
+            JsfUtil.addErrorMessage("Still Under Development");
+            return "";
+
+        } else {
+            switch (returnFormat.getFrequency()) {
+                case Annual:
+                    selected.setReturnYear(webUserController.getLastYear());
+                    break;
+                case Quarterly:
+                    selected.setQuarter(webUserController.getLastQuarterFromDate(new Date()));
+                    if (selected.getQuarter() == Quarter.Forth) {
+                        selected.setReturnYear(webUserController.getLastYear());
+                    } else {
+                        selected.setReturnYear(webUserController.getThisYear());
+                    }
+                    break;
+                case Monthly:
+                    selected.setReturnMonth(webUserController.getLastMonth(new Date()));
+                    if (selected.getReturnMonth() == Month.December) {
+                        selected.setReturnYear(webUserController.getLastYear());
+                    } else {
+                        selected.setReturnYear(webUserController.getThisYear());
+                    }
+                    break;
+                case Weekely:
+                    JsfUtil.addErrorMessage("Still Under Development");
+                    return "";
+                default:
+                    JsfUtil.addErrorMessage("Still Under Development");
+                    return "";
+
+            }
+        }
+        return "/returnSubmission/submit_new_report_selected_full";
     }
 
     public String toSubmitNewReportAfterSelection() {
@@ -347,6 +397,17 @@ public class ReturnSubmissionController implements Serializable {
         } else {
             getFacade().edit(selected);
             JsfUtil.addSuccessMessage("Submission Updated");
+        }
+        return "/index";
+    }
+
+    public String submitReturnAsAdmin() {
+        if (selected.getId() == null) {
+            getFacade().create(selected);
+            JsfUtil.addSuccessMessage("Created");
+        } else {
+            getFacade().edit(selected);
+            JsfUtil.addSuccessMessage("Updated");
         }
         return "/index";
     }
