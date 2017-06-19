@@ -25,6 +25,8 @@
                         <p:submenu label="MOH">
                             <p:menuitem ajax="false" value="Submit New Return" action="#{returnSubmissionController.toSubmitNewReport()}" />
                             <p:menuitem ajax="false" value="Submission Status" action="#{returnSubmissionController.toCheckSubmissionStatus()}" />
+                            <p:menuitem ajax="false" value="Return Formats" action="#{returnSubmissionController.listReturnFormatLastSubmissions()}" />
+                            
                         </p:submenu>
 
                         <p:submenu label="RDHS">
@@ -44,7 +46,6 @@
                         <p:submenu label="#{bundle.Maintenance}">
                             <p:menuitem  ajax="false" value="Manage Areas" action="/area/add_area_index" />
                             <p:menuitem  ajax="false" value="Manage Users" action="/webUser/add_webuser_index" />
-                            <p:menuitem  ajax="false"  value="Manage Schools" action="/institution/index" />
                             <p:menuitem  ajax="false" action="/item/List" value="Manage Items"/>
                             <p:menuitem  ajax="false" action="/returnFormat/List" value="Manage Return Formats"/>
                             <p:menuitem  ajax="false" action="/returnSubmission/List" value="Manage Return Submissions"/>

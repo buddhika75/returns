@@ -57,7 +57,7 @@
                             </p:calendar>
 
                             <p:outputLabel value="ReceiveDate:" for="receiveDate" />
-                            <p:calendar  id="receiveDate" value="#{returnSubmissionController.selected.sentDate}" title="SentDate" pattern="dd/MM/yy">
+                            <p:calendar  id="receiveDate" value="#{returnSubmissionController.selected.receiveDate}" title="SentDate" pattern="dd/MM/yy">
                             </p:calendar>
 
                             <p:outputLabel value="ReturnReceiveCategory:" for="returnReceiveCategory" />
@@ -79,6 +79,9 @@
 
                             <p:commandButton ajax="false" value="Submit" action="#{returnSubmissionController.submitReturnAsAdmin()}" ></p:commandButton>
 
+                            
+                             <p:commandButton ajax="false" value="Submit" action="#{returnSubmissionController.makeReceiveDateFromSentDate()}" ></p:commandButton>
+                            
                         </p:panelGrid>
 
 

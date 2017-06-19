@@ -76,7 +76,8 @@ public class ReturnFormatController implements Serializable {
 
     public List<ReturnFormat> getItems() {
         if (items == null) {
-            items = getFacade().findAll();
+            String j = "Select f from ReturnFormat f order by f.name";
+            items = getFacade().findBySQL(j);
         }
         return items;
     }
@@ -114,11 +115,11 @@ public class ReturnFormatController implements Serializable {
     }
 
     public List<ReturnFormat> getItemsAvailableSelectMany() {
-        return getFacade().findAll();
+        return getItems();
     }
 
     public List<ReturnFormat> getItemsAvailableSelectOne() {
-        return getFacade().findAll();
+        return getItems();
     }
 
     @FacesConverter(forClass = ReturnFormat.class)
