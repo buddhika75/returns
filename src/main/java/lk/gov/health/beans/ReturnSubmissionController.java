@@ -51,6 +51,10 @@ public class ReturnSubmissionController implements Serializable {
     Month month;
     Quarter quarter;
     Date deadlineDate;
+    private Date fromDate;
+    private Date toDate;
+    
+    
 
     List<Area> mySendingAreas;
 
@@ -60,7 +64,25 @@ public class ReturnSubmissionController implements Serializable {
         items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/receive_returns";
     }
+    
+    public String toCheckSubmissionStatus() {
+        items = new ArrayList<ReturnSubmission>();
+        return "/returnSubmission/check_submission_status";
+    }
 
+     public String listMySubmissions() {
+        String j;
+        Map m = new HashMap();
+        j = "select r from ReturnSubmission r "
+                + " where r.sentArea=:sa "
+                + " and r.sentDate between :fd and :td";
+        m.put("fd", fromDate);
+        m.put("td", toDate);
+        m.put("sa", webUserController.getLoggedMohArea());
+        items = getFacade().findBySQL(j, m);
+        return "";
+    }
+    
     public String listPendingRetunrsToReceive() {
         if (returnFormat == null) {
             JsfUtil.addErrorMessage("Select a return format");
@@ -572,6 +594,30 @@ public class ReturnSubmissionController implements Serializable {
         return model;
     }
 
+    public Date getFromDate() {
+        if(fromDate==null){
+            fromDate = webUserController.getFirstDayOfQuarter();
+        }
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        if(toDate==null){
+            toDate=webUserController.getLastDayOfQuarter();
+        }
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
+    
+    
     @FacesConverter(forClass = ReturnSubmission.class)
     public static class ReturnSubmissionControllerConverter implements Converter {
 

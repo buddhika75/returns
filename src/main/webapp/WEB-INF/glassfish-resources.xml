@@ -33,4 +33,5 @@
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/dsM" object-type="user" pool-name="derby_net_mohreturns_mohreturnsPool"/>
     <jdbc-resource enabled="true" jndi-name="java:app/dsR2" object-type="user" pool-name="mysql_returns_rootPool"/>
+    <jdbc-resource enabled="true" jndi-name="java:app/dsR1" object-type="user" pool-name="mysql_returns_rootPool"/>
 </resources>

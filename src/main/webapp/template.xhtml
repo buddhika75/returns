@@ -22,13 +22,21 @@
                 <h:form id="menuForm">
                     <p:menubar rendered="#{webUserController.logged}">
                         <p:menuitem value="#{bundle.Home}" outcome="/index" icon="ui-icon-home"/>
-                        <p:submenu label="Actions">
+                        <p:submenu label="MOH">
                             <p:menuitem ajax="false" value="Submit New Return" action="#{returnSubmissionController.toSubmitNewReport()}" />
+                            <p:menuitem ajax="false" value="Submission Status" action="#{returnSubmissionController.toCheckSubmissionStatus()}" />
+                        </p:submenu>
+
+                        <p:submenu label="RDHS">
                             <p:menuitem ajax="false" value="Receive Returns" action="#{returnSubmissionController.toReceiveReturns()}" />
                             <p:menuitem ajax="false" value="Check Returns" action="#{returnSubmissionController.toCheckReturns()}" />
+                        </p:submenu>
+
+                        <p:submenu label="User">
                             <p:menuitem ajax="false" value="Edit my details" action="#{webUserController.toEditMyDetails()}" />
                             <p:menuitem ajax="false" value="Change my password" action="#{webUserController.toEditMyPassword()}" />
                         </p:submenu>
+
                         <p:submenu label="Administration">
                             <p:menuitem ajax="false" value="Submit New Return" action="#{returnSubmissionController.toSubmitNewReportFull()}" />
                         </p:submenu>
