@@ -27,11 +27,11 @@
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_returnYear}" for="returnYear" />
                         <p:inputText id="returnYear" value="#{returnSubmissionController.selected.returnYear}" title="#{bundleReturns.CreateReturnSubmissionTitle_returnYear}" />
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_fromDate}" for="fromDate" />
-                        <p:calendar id="fromDate" pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.fromDate}" title="#{bundleReturns.EditReturnSubmissionTitle_fromDate}"  showOn="button"/>
+                        <p:calendar id="fromDate"  timeZone="Asia/Colombo"  pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.fromDate}" title="#{bundleReturns.EditReturnSubmissionTitle_fromDate}"  showOn="button"/>
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_toDate}" for="toDate" />
-                        <p:calendar id="toDate" pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.toDate}" title="#{bundleReturns.EditReturnSubmissionTitle_toDate}"  showOn="button"/>
+                        <p:calendar id="toDate"  timeZone="Asia/Colombo" pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.toDate}" title="#{bundleReturns.EditReturnSubmissionTitle_toDate}"  showOn="button"/>
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_sentDate}" for="sentDate" />
-                        <p:calendar id="sentDate" pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.sentDate}" title="#{bundleReturns.EditReturnSubmissionTitle_sentDate}"  showOn="button"/>
+                        <p:calendar id="sentDate"  timeZone="Asia/Colombo"  pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.sentDate}" title="#{bundleReturns.EditReturnSubmissionTitle_sentDate}"  showOn="button"/>
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_sentArea}" for="sentArea" />
                         <p:selectOneMenu id="sentArea" value="#{returnSubmissionController.selected.sentArea}" >
                             <f:selectItems value="#{areaController.itemsAvailableSelectOne}"
@@ -57,7 +57,7 @@
                                            itemValue="#{receivedByItem}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_receiveDate}" for="receiveDate" />
-                        <p:calendar id="receiveDate" pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.receiveDate}" title="#{bundleReturns.EditReturnSubmissionTitle_receiveDate}"  showOn="button"/>
+                        <p:calendar id="receiveDate"  timeZone="Asia/Colombo" pattern="dd MMMM yyyy" value="#{returnSubmissionController.selected.receiveDate}" title="#{bundleReturns.EditReturnSubmissionTitle_receiveDate}"  showOn="button"/>
                         <p:outputLabel value="#{bundleReturns.CreateReturnSubmissionLabel_receiveArea}" for="receiveArea" />
                         <p:inputText id="receiveArea" value="#{returnSubmissionController.selected.receiveArea}" title="#{bundleReturns.CreateReturnSubmissionTitle_receiveArea}" />
                     </p:panelGrid>

@@ -18,10 +18,9 @@
                         <p:growl id="growl1" life="3000" showDetail="true" />
 
                         <p:gmap id="gmap" center="#{areaController.selected.centreLatitude},#{areaController.selected.centreLongitude}" zoom="#{areaController.selected.zoomLavel}" type="HYBRID" style="width:600px;height:400px;border: 1px solid black;" model="#{areaController.polygonModel}">
-                            <p:ajax event="overlaySelect" listener="#{polygonsView.onPolygonSelect}" update="growl1" />
                         </p:gmap>
                         
-                        #{areaController.polygonModel}
+                      
                     </h:form>
                 </f:view>
 

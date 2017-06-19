@@ -33,6 +33,10 @@
                             <p:menuitem ajax="false" value="Receive Returns" action="#{returnSubmissionController.toReceiveReturns()}" />
                             <p:menuitem ajax="false" value="Check Returns" action="#{returnSubmissionController.toCheckReturns()}" />
                         </p:submenu>
+                        
+                         <p:submenu label="PDHS">
+                            <p:menuitem ajax="false" value="Check Returns" action="#{returnSubmissionController.toCheckReturns()}" />
+                        </p:submenu>
 
                         <p:submenu label="User">
                             <p:menuitem ajax="false" value="Edit my details" action="#{webUserController.toEditMyDetails()}" />

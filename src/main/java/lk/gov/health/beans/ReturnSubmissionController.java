@@ -24,15 +24,21 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
+import lk.gov.health.faces.CoordinateFacade;
 import lk.gov.health.faces.ReturnFormatFacade;
 import lk.gov.health.schoolhealth.Area;
 import lk.gov.health.schoolhealth.AreaType;
+import lk.gov.health.schoolhealth.Coordinate;
 import lk.gov.health.schoolhealth.Month;
 import lk.gov.health.schoolhealth.Quarter;
 import lk.gov.health.schoolhealth.ReturnFormat;
 import lk.gov.health.schoolhealth.ReturnFormatLastSubmission;
 import lk.gov.health.schoolhealth.ReturnReceiveCategory;
 import org.primefaces.event.timeline.TimelineSelectEvent;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Polygon;
 import org.primefaces.model.timeline.TimelineEvent;
 import org.primefaces.model.timeline.TimelineModel;
 
@@ -46,6 +52,8 @@ public class ReturnSubmissionController implements Serializable {
     private lk.gov.health.faces.ReturnSubmissionFacade ejbFacade;
     @EJB
     ReturnFormatFacade returnFormatFacade;
+    @EJB
+    CoordinateFacade coordinateFacade;
     private List<ReturnSubmission> items = null;
     private List<ReturnSubmission> genItems = null;
     private ReturnSubmission selected;
@@ -62,6 +70,7 @@ public class ReturnSubmissionController implements Serializable {
     List<Area> mySendingAreas;
 
     private TimelineModel model;
+    private MapModel polygonModel;
 
     public String listReturnFormatLastSubmissions() {
         returnFormatLastSubmissions = new ArrayList<ReturnFormatLastSubmission>();
@@ -224,7 +233,64 @@ public class ReturnSubmissionController implements Serializable {
     }
 
     private void markMapForReceiving() {
+        polygonModel = new DefaultMapModel();
+       
+        for (Area a : mySendingAreas) {
 
+            //Polygon
+            Polygon polygon = new Polygon();
+
+            String j = "select c from Coordinate c where c.area=:a";
+            Map m = new HashMap();
+            m.put("a", a);
+            List<Coordinate> cs = coordinateFacade.findBySQL(j, m);
+            for (Coordinate c : cs) {
+                LatLng coord = new LatLng(c.getLatitude(), c.getLongitude());
+                polygon.getPaths().add(coord);
+            }
+
+            polygon.setStrokeColor("#FF9900");
+            
+
+            m = new HashMap();
+
+            j = "select r from ReturnSubmission r "
+                    + " where r.returnFormat=:rf "
+                    + " and r.receiveArea=:ra "
+                    + " and r.sentArea=:sa ";
+            if (returnFormat.isNeedYear()) {
+                j += " and r.returnYear=:ry ";
+                m.put("ry", year);
+            }
+            if (returnFormat.isNeedQuarter()) {
+                j += " and r.quarter=:rq ";
+                m.put("rq", quarter);
+            }
+            if (returnFormat.isNeedMonth()) {
+                j += " and r.returnMonth=:rm ";
+                m.put("rm", month);
+            }
+            j += " order by r.receiveDate desc";
+            m.put("sa", a);
+            m.put("rf", returnFormat);
+            m.put("ra", webUserController.getLoggedRdhsArea());
+            ReturnSubmission rs = getFacade().findFirstBySQL(j, m);
+            if (rs == null) {
+                polygon.setFillColor("#D8000C");
+            } else if (rs.getReceiveDate() == null) {
+                 polygon.setFillColor("#D8000C");
+            } else if (rs.getReceiveDate().after(deadlineDate)) {
+                 polygon.setFillColor("#9F6000");
+            } else {
+                 polygon.setFillColor("#4F8A10");
+            }
+            
+            polygon.setStrokeOpacity(1);
+            polygon.setFillOpacity(0.9);
+            polygon.setData(a.getName());
+            polygonModel.addOverlay(polygon);
+           
+        }
     }
 
     public String markAsReceived() {
@@ -502,6 +568,25 @@ public class ReturnSubmissionController implements Serializable {
         return selected;
     }
 
+    public String deleteSubmission() {
+        if (selected == null) {
+            JsfUtil.addErrorMessage("Nothing to delete");
+            return "";
+        }
+        getFacade().remove(selected);
+        listReceivedReturns();
+        JsfUtil.addSuccessMessage("Deleted");
+        return "";
+    }
+
+    public String editSubmission() {
+        if (selected == null) {
+            JsfUtil.addErrorMessage("Nothing to delete");
+            return "";
+        }
+        return "/returnSubmission/submit_new_report_selected_full";
+    }
+
     public void create() {
         persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleReturns").getString("ReturnSubmissionCreated"));
         if (!JsfUtil.isValidationFailed()) {
@@ -663,6 +748,14 @@ public class ReturnSubmissionController implements Serializable {
 
     public void setReturnFormatLastSubmissions(List<ReturnFormatLastSubmission> returnFormatLastSubmissions) {
         this.returnFormatLastSubmissions = returnFormatLastSubmissions;
+    }
+
+    public MapModel getPolygonModel() {
+        return polygonModel;
+    }
+
+    public void setPolygonModel(MapModel polygonModel) {
+        this.polygonModel = polygonModel;
     }
 
     @FacesConverter(forClass = ReturnSubmission.class)
