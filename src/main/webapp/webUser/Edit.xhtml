@@ -30,6 +30,8 @@
                                            itemValue="#{areaItem}"
                                            itemLabel="#{areaItem.name}"/>
                         </p:selectOneMenu>
+                        <p:outputLabel value="Activated"  />
+                        <p:selectBooleanCheckbox value="#{webUserController.selected.active}" ></p:selectBooleanCheckbox>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{webUserController.update}" value="#{bundle.Save}" update="display,:WebUserListForm:datalist,:growl" oncomplete="handleSubmit(args, 'WebUserEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="WebUserEditDialog.hide()"/>
