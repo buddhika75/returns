@@ -32,7 +32,7 @@
                         <p:submenu label="RDHS" rendered="#{webUserController.rdhsStaff}">
                             <p:menuitem ajax="false" value="Receive My Returns" action="#{returnSubmissionController.toReceiveReturns()}" />
                             <p:menuitem ajax="false" value="Check My Returns" action="#{returnSubmissionController.toCheckReturns()}" />
-                            <p:menuitem ajax="false" value="Check All Returns" action="#{returnSubmissionController.toCheckReturnsAll()}" disabled="#{webUserController.rdhs}" />
+                            <p:menuitem ajax="false" value="Check All Returns" action="#{returnSubmissionController.toCheckReturnsAll()}" disabled="#{!webUserController.rdhs}" />
                         </p:submenu>
 
                         <p:submenu label="PDHS"  rendered="#{webUserController.pdhsStaff}">
