@@ -6,7 +6,9 @@ import lk.gov.health.beans.util.JsfUtil.PersistAction;
 import lk.gov.health.faces.ReturnFormatFacade;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 
 @Named("returnFormatController")
 @SessionScoped
@@ -25,6 +28,8 @@ public class ReturnFormatController implements Serializable {
 
     @EJB
     private lk.gov.health.faces.ReturnFormatFacade ejbFacade;
+    @Inject
+    WebUserController webUserController;
     private List<ReturnFormat> items = null;
     private ReturnFormat selected;
 
@@ -120,6 +125,29 @@ public class ReturnFormatController implements Serializable {
 
     public List<ReturnFormat> getItemsAvailableSelectOne() {
         return getItems();
+    }
+
+    public List<ReturnFormat> getReturnsToReceive() {
+        List<ReturnFormat> rfs;
+        String j = "Select f from ReturnFormat f "
+                + " where f.receivedBy=:mp"
+                + " order by f.name";
+
+        Map m = new HashMap();
+        m.put("mp", webUserController.getLoggedPrivilegeType());
+        rfs = getFacade().findBySQL(j,m);
+        return rfs;
+    }
+
+    public List<ReturnFormat> getReturnsToSend() {
+        List<ReturnFormat> rfs;
+        String j = "Select f from ReturnFormat f "
+                + " where f.sentBy=:mp"
+                + " order by f.name";
+        Map m = new HashMap();
+        m.put("mp", webUserController.getLoggedPrivilegeType());
+        rfs = getFacade().findBySQL(j,m);
+        return rfs;
     }
 
     @FacesConverter(forClass = ReturnFormat.class)

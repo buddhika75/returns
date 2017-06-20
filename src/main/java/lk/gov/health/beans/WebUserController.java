@@ -84,51 +84,49 @@ public class WebUserController implements Serializable {
     public void setCurrentPassword(String currentPassword) {
         this.currentPassword = currentPassword;
     }
-    
-    
-    
-    public String toEditMyDetails(){
-        if(loggedUser==null){
+
+    public String toEditMyDetails() {
+        if (loggedUser == null) {
             return "";
         }
         selected = loggedUser;
         return "/webUser/edit_my_details";
     }
 
-    public String toEditMyPassword(){
-        if(loggedUser==null){
+    public String toEditMyPassword() {
+        if (loggedUser == null) {
             return "";
         }
         selected = loggedUser;
         return "/webUser/edit_my_password";
     }
-    
+
     public String toAddNewUser() {
         selected = new WebUser();
         selected.setActive(true);
         return "/webUser/add_new_user";
     }
-    
-    public String updateMyPassword(){
-        if(selected==null){
+
+    public String updateMyPassword() {
+        if (selected == null) {
             return "";
         }
-        if(selected.getId()==null){
+        if (selected.getId() == null) {
             return "";
         }
-        if(!selected.getPassword().equals(currentPassword)){
+        if (!selected.getPassword().equals(currentPassword)) {
             JsfUtil.addErrorMessage("Current Password is Wrong");
             return "";
         }
-        if(!password.equals(confirmPassword)){
+        if (!password.equals(confirmPassword)) {
             JsfUtil.addErrorMessage("Password and confirm password is NOT maching");
             return "";
         }
         selected.setPassword(password);
         getFacade().edit(selected);
-        password="";
-        confirmPassword="";
-        currentPassword="";
+        password = "";
+        confirmPassword = "";
+        currentPassword = "";
         selected = null;
         JsfUtil.addSuccessMessage("Updated");
         return "/index";
@@ -281,6 +279,98 @@ public class WebUserController implements Serializable {
         }
     }
 
+    public boolean isMohStaff() {
+        if (loggedPrivilegeType == null) {
+            return false;
+        }
+        switch (loggedPrivilegeType) {
+            case System_Administrator:
+            case System_Super_User:
+            case MOH:
+            case AMOH:
+            case MO:
+            case RMO_AMO:
+            case SPHNS:
+            case SPHI:
+            case SPHM:
+            case MOH_Staff:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isRdhsStaff() {
+        if (loggedPrivilegeType == null) {
+            return false;
+        }
+        switch (loggedPrivilegeType) {
+            case System_Administrator:
+            case System_Super_User:
+            case RDHS:
+            case CCP_RDHS:
+            case MO_School_Health:
+            case MO_RDHS:
+            case MO_MCH:
+            case Regional_Epidemiologist:
+            case DSPHNS:
+            case DSPHI:
+            case DSPHM:
+            case RSPHNO:
+            case SPHID:
+            case SSDT:
+            case MO_Planning_RDHS:
+            case RDHS_Staff:
+            case Triposha_Limited:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isAdmin() {
+        if (loggedPrivilegeType == null) {
+            return false;
+        }
+        switch (loggedPrivilegeType) {
+            case System_Administrator:
+            case System_Super_User:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isPdhsStaff() {
+        if (loggedPrivilegeType == null) {
+            return false;
+        }
+        switch (loggedPrivilegeType) {
+            case System_Administrator:
+            case System_Super_User:
+            case PDHS:
+            case CCP_PDHS:
+            case MO_PDHS:
+            case PSPHNS:
+            case PSPHI:
+            case PSPHM:
+            case PDHS_Staff:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isRdhs() {
+        if (loggedPrivilegeType == null) {
+            return false;
+        } else if (loggedPrivilegeType == PrivilegeType.System_Administrator || loggedPrivilegeType == PrivilegeType.System_Super_User || loggedPrivilegeType == PrivilegeType.RDHS) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void addGuestPrivilages() {
         myPrivilegeTypes.add(PrivilegeType.Guest);
     }
@@ -307,6 +397,9 @@ public class WebUserController implements Serializable {
         myPrivilegeTypes.add(PrivilegeType.MO_MCH);
         myPrivilegeTypes.add(PrivilegeType.MO_Planning_RDHS);
         myPrivilegeTypes.add(PrivilegeType.MO_School_Health);
+        myPrivilegeTypes.add(PrivilegeType.MO_MCH);
+        myPrivilegeTypes.add(PrivilegeType.Regional_Epidemiologist);
+        myPrivilegeTypes.add(PrivilegeType.RDHS);
     }
 
     private void addPdhsPrivileges() {
@@ -446,6 +539,8 @@ public class WebUserController implements Serializable {
             case MO_PDHS:
             case CCP_PDHS:
             case CCP_RDHS:
+            case MO_MCH:
+            case MO_Planning_RDHS:
                 return true;
             case Guest:
                 return false;
@@ -1051,7 +1146,7 @@ public class WebUserController implements Serializable {
         c.set(Calendar.MONTH, Calendar.DECEMBER);
         return getLastDayOfMonth(c.getTime());
     }
-    
+
     public Date getLastDayOfYear(int year) {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, year);
