@@ -467,6 +467,7 @@ public class WebUserController implements Serializable {
             case MO_School_Health:
             case MO_MCH:
             case MO_Planning_RDHS:
+            case RDHS:
             case Regional_Epidemiologist:
                 loggedRdhsArea = loggedUser.getArea();
                 loggedPdhsArea = loggedRdhsArea.getParentArea();
@@ -483,6 +484,7 @@ public class WebUserController implements Serializable {
             case PDHS_Staff:
             case MO_PDHS:
             case CCP_PDHS:
+            case PDHS:
                 loggedPdhsArea = loggedUser.getArea();
                 myProvinces.add(loggedPdhsArea);
                 myDistricts = areaController.getAreas(AreaType.District, loggedRdhsArea);
