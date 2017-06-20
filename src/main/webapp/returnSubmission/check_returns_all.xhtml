@@ -23,7 +23,7 @@
                             <p:outputLabel value="Return" ></p:outputLabel>
                             <p:selectOneMenu value="#{returnSubmissionController.returnFormat}" var="f"  >
                                 <f:selectItem itemLabel="Select a Return" ></f:selectItem>
-                                <f:selectItems value="#{returnFormatController.returnsToReceive}" var="f1" itemValue="#{f1}"  itemLabel="#{f1.name}"></f:selectItems>
+                                <f:selectItems value="#{returnFormatController.itemsAvailableSelectOne}" var="f1" itemValue="#{f1}"  itemLabel="#{f1.name}"></f:selectItems>
                                 <p:column headerText="Name" >
                                     <p:outputLabel value="#{f.name}" ></p:outputLabel>
                                 </p:column>

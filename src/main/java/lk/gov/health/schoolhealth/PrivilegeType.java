@@ -13,9 +13,12 @@ public enum PrivilegeType {
     //System Level
     System_Administrator,
     System_Super_User,
+    @Deprecated
     Institution_Administrator,
+    @Deprecated
     Institution_Super_User,
     //Provincial Level
+    PDHS,
     CCP_PDHS,
     MO_PDHS,
     PSPHNS,
@@ -23,6 +26,7 @@ public enum PrivilegeType {
     PSPHM,
     PDHS_Staff,
     //District Level
+    RDHS,
     CCP_RDHS,
     MO_School_Health,
     MO_RDHS,

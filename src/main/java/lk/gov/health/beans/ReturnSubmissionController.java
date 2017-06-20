@@ -321,6 +321,11 @@ public class ReturnSubmissionController implements Serializable {
         items = new ArrayList<ReturnSubmission>();
         return "/returnSubmission/check_returns";
     }
+    
+    public String toCheckReturnsAll() {
+        items = new ArrayList<ReturnSubmission>();
+        return "/returnSubmission/check_returns_all";
+    }
 
     public String toSubmitNewReportAfterSelectionAsAdmin() {
         if (returnFormat == null) {
